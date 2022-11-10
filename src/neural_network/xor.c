@@ -104,7 +104,8 @@ int main(int argc, char* argv[])
 
         printf("%.1f XOR %.1f = %f <=> %.1f\n", values[0], values[1], 
             network2.layers[network2.nb_layers - 1].outputs[0], result);
-
+        number = 0;
+        space = 0;
         scanf("%4[^\n]%*c", user_input);
     }
 
