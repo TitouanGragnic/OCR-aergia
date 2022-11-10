@@ -75,3 +75,64 @@ void calculate_output(struct Layer* layer, double* inputs)
         layer->outputs[i] = sigmoid(si + layer->bias[i]);
     }
 }
+
+void save_layer(struct Layer* layer, FILE* file, int first)
+{
+    /*
+    write all the data of the layer if the stream file
+    given in parameter.
+    */
+    if(first)
+    {
+    	fprintf(file, "%ld\n", layer->nb_neurons);
+	    fprintf(file, "%ld\n", layer->w_per_neuron);
+    }
+    else
+    {
+    	fprintf(file, "%ld\n", layer->nb_neurons);
+	    fprintf(file, "%ld\n", layer->w_per_neuron);
+
+	    for(size_t i = 0; i < layer->nb_neurons; i++)
+	    {
+	        fprintf(file, "%lf\n", layer->bias[i]);
+	        for(size_t j = 0; j < layer->w_per_neuron; j++)
+	        {
+	            fprintf(file, "%lf\n", layer->weights[get_w(layer, i, j)]);
+	        }
+	    }
+    }
+}
+
+void load_layer(struct Layer* layer, FILE* file)
+{
+    /*
+    read all the data of a layer from a stream file
+    given in parameter, and put them into the layer
+    struct.
+    */
+    fscanf(file, "%lu", &layer->nb_neurons);
+    fscanf(file, "%lu", &layer->w_per_neuron);
+
+    if(layer->w_per_neuron)
+    {
+        layer->weights = malloc(sizeof(double) * layer->nb_neurons * layer->w_per_neuron);
+        layer->previous_dw = calloc(sizeof(double), 
+        layer->nb_neurons * layer->w_per_neuron);
+        layer->bias = malloc(sizeof(double) * layer->nb_neurons);
+        layer->errors = calloc(sizeof(double), layer->nb_neurons);
+        for(size_t i = 0; i < layer->nb_neurons; i++)
+        {
+            fscanf(file, "%lf", &layer->bias[i]);
+            for(size_t j = 0; j < layer->w_per_neuron; j++)
+                fscanf(file, "%lf", &layer->weights[get_w(layer, i, j)]);
+        }
+    }
+    else
+    {
+        layer->weights = NULL;
+        layer->previous_dw = NULL;
+        layer->bias = NULL;
+        layer->errors = NULL;
+    }
+    layer->outputs = malloc(sizeof(double) * layer->nb_neurons);
+}

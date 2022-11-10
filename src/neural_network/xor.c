@@ -50,7 +50,12 @@ int main(int argc, char* argv[])
 
         train_network(network, training, (i % 100 == 0), string);
     }
-    
+
+    save_network(network, "logs/xor.txt");
+    printf("Network successfully saved.\n");
+    struct Network network2 = load_network("logs/xor.txt");
+    printf("Network successfully loaded.\n");
+
     /*
     part that manages the user input and sends back the result found by the network.
     */
@@ -75,16 +80,17 @@ int main(int argc, char* argv[])
                 errx(1, "this is not the way.\n");
             i += 1;
         }
-        compute_network(network, values);
-        double result = network.layers[network.nb_layers - 1].outputs[0];
+        compute_network(network2, values);
+        double result = network2.layers[network2.nb_layers - 1].outputs[0];
         result = result > 0.5f ? 1 : 0;
 
         printf("%.1f XOR %.1f = %f <=> %.1f\n", values[0], values[1], 
-            network.layers[network.nb_layers - 1].outputs[0], result);
+            network2.layers[network2.nb_layers - 1].outputs[0], result);
 
         scanf("%4[^\n]%*c", user_input);
     }
 
     free_network(network);
+    free_network(network2);
     return 0;
 }

@@ -35,6 +35,7 @@ void free_network(struct Network network)
     network.nb_layers = 0;
     free(network.layers);
 }
+
 void compute_network(struct Network network, double* inputs)
 {
      /*
@@ -133,17 +134,59 @@ void print_training(struct Network network,struct Training training, size_t i, c
     /*
     print the training.
     */
-    double* arr = training_in(&training, i);
+    printf("\033[0;37m(expected = ");
+    double* array = training_out(&training, i);
+    for(size_t j = 0; j < training.nb_out; j++)
+        printf("\033[0;31m%.1f", array[j]);
+    printf(" \033[0;37m) ");
+    for(size_t j = 0; j < training.nb_out; j++)
+        printf(" \033[0;32m%f ", network.layers[network.nb_layers - 1].outputs[j]);
+    printf("\033[0;37m<- ");
+    array = training_in(&training, i);
     for(size_t j = 0; j < training.nb_in - 1; j++)
-        printf("%.1f %s ", arr[j], string);
-    printf("%.1f ", arr[training.nb_in - 1]);
-    printf("= ");
-    for(size_t j = 0; j < training.nb_out; j++)
-        printf("%f ", network.layers[network.nb_layers - 1].outputs[j]);
-    printf("(expected = ");
-    arr = training_out(&training, i);
-    for(size_t j = 0; j < training.nb_out; j++)
-        printf("%.1f", arr[j]);
-    printf(")\n");
+        printf("%.1f %s ", array[j], string);
+    printf("%.1f ", array[training.nb_in - 1]);
+    printf("\n");
 }
 
+void save_network(struct Network network, const char* path)
+{
+    /*
+    save the network to the file specified in parameter;
+    for each layer, call the function save_layer.
+    */
+    FILE* fptr;
+    fptr = fopen(path, "w");
+    if(fptr == NULL)
+        errx(1, "Path is invalid, we were unable to find the file.");
+    else
+    {
+        fprintf(fptr, "%ld\n", network.nb_layers);
+        for(size_t i = 0; i < network.nb_layers; i++)
+	        save_layer(&network.layers[i], fptr, i == 0);
+    }
+    fclose(fptr);
+}
+
+struct Network load_network(const char* path)
+{
+    /*
+    load the network from a file specified in parameter;
+    return a struct Network, the network.
+    */
+    FILE* file = fopen(path, "r");
+
+    if(!file)
+        errx(1, "Path is invalid, we were unable to find the file.");
+
+    struct Network network;
+    fscanf(file, "%lu", &network.nb_layers);
+    network.layers = malloc(sizeof(struct Layer) * network.nb_layers);
+
+    for(size_t i = 0; i < network.nb_layers; i++)
+    {
+        load_layer(&network.layers[i], file);
+    }
+    fclose(file);
+    return network;
+}

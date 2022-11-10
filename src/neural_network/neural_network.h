@@ -25,4 +25,7 @@ void compute_network(struct Network network, double* inputs);
 
 void print_training(struct Network network, struct Training training, size_t i, char* string);
 
+void save_network(struct Network network, const char* path);
+
+struct Network load_network(const char* path);
 #endif

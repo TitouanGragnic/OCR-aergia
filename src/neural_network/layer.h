@@ -24,4 +24,7 @@ void free_layer(struct Layer* layer);
 
 void calculate_output(struct Layer* layer, double* inputs);
 
+void save_layer(struct Layer* layer, FILE* file, int first);
+
+void load_layer(struct Layer* layer, FILE* file);
 #endif
