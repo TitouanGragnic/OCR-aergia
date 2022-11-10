@@ -18,7 +18,8 @@ struct Layer
 
 size_t get_w(struct Layer* layer, size_t i_n, size_t i_w);
 
-void initialize_layer(struct Layer* layer, size_t nb_neurons, size_t w_per_neuron);
+void initialize_layer(struct Layer* layer,
+ size_t nb_neurons, size_t w_per_neuron);
 
 void free_layer(struct Layer* layer);
 

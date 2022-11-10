@@ -57,10 +57,19 @@ int main(int argc, char* argv[])
     printf("Network successfully loaded.\n");
 
     /*
-    part that manages the user input and sends back the result found by the network.
+    part that manages the user input and sends back the result 
+    found by the network.
     */
     char user_input[5];
+    printf("\n");
+    printf("Enter 2 integers which are part of the train set separated\n");
+    printf("by a space and I will compute the result.\n");
+    printf("\n");
+    printf("Write \"exit\" to leave.\n");
     scanf("%4[^\n]%*c", user_input);
+
+    int number = 0;
+    int space = 0;
 
     while(strcmp(user_input, "exit"))
     {
@@ -71,13 +80,22 @@ int main(int argc, char* argv[])
 
         while(user_input[i])
         {
-            if(j < 2 && (user_input[i] == '0' || user_input[i] == '1'))
+            if(user_input[i] == '0' || user_input[i] == '1')
             {
-                values[j] = user_input[i] - '0';
-                j += 1;
+                if(number && !space)
+                    errx(1, "Wrong inputs, bye.\n");
+                if(j < 2)
+                {
+                    values[j] = user_input[i] - '0';
+                    j += 1;
+                }
+                number = 1;
+                space = 0;
             }
             else if(user_input[i] != ' ' && user_input[i] != -64)
-                errx(1, "this is not the way.\n");
+                errx(1, "Wrong inputs, bye.\n");
+            else
+                space = 1;
             i += 1;
         }
         compute_network(network2, values);

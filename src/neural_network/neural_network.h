@@ -19,11 +19,13 @@ struct Network initialize_network(size_t nb_layers, size_t* nb_neurons_layer);
 
 void free_network(struct Network network);
 
-void train_network(struct Network network, struct Training training, int print, char string[]);
+void train_network(struct Network network, struct Training training,
+ int print, char string[]);
 
 void compute_network(struct Network network, double* inputs);
 
-void print_training(struct Network network, struct Training training, size_t i, char* string);
+void print_training(struct Network network, struct Training training,
+ size_t i, char* string);
 
 void save_network(struct Network network, const char* path);
 

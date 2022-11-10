@@ -17,7 +17,8 @@ size_t get_w(struct Layer* layer, size_t i_n, size_t i_w)
     return i_w + i_n * layer->w_per_neuron;
 }
 
-void initialize_layer(struct Layer* layer, size_t nb_neurons, size_t w_per_neuron)
+void initialize_layer(struct Layer* layer, size_t nb_neurons,
+ size_t w_per_neuron)
 {
     /*
     initialize a layer.
@@ -115,7 +116,8 @@ void load_layer(struct Layer* layer, FILE* file)
 
     if(layer->w_per_neuron)
     {
-        layer->weights = malloc(sizeof(double) * layer->nb_neurons * layer->w_per_neuron);
+        layer->weights = malloc(sizeof(double) * layer->nb_neurons
+         * layer->w_per_neuron);
         layer->previous_dw = calloc(sizeof(double), 
         layer->nb_neurons * layer->w_per_neuron);
         layer->bias = malloc(sizeof(double) * layer->nb_neurons);

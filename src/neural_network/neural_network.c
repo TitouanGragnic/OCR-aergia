@@ -19,7 +19,8 @@ struct Network initialize_network(size_t nb_layers, size_t* nb_neurons_layer)
 
     initialize_layer(&layer[0], nb_neurons_layer[0], 0);
     for(size_t i = 1; i < nb_layers; i++)
-        initialize_layer(&layer[i], nb_neurons_layer[i], nb_neurons_layer[i-1]);
+        initialize_layer(&layer[i], nb_neurons_layer[i],
+         nb_neurons_layer[i-1]);
     network.layers = layer;
 
     return network;
@@ -58,7 +59,8 @@ void forward_prop(struct Network network, double* inputs, double* outputs)
     compute_network(network, inputs);
     struct Layer* last = &network.layers[network.nb_layers - 1];
     for(size_t i = 0; i < last->nb_neurons; i++)
-        last->errors[i] = sigmoid_prime(last->outputs[i]) * (outputs[i] - last->outputs[i]);
+        last->errors[i] =
+         sigmoid_prime(last->outputs[i]) * (outputs[i] - last->outputs[i]);
     
     for(size_t i = network.nb_layers - 2; i > 0; i--)
     {
@@ -68,8 +70,10 @@ void forward_prop(struct Network network, double* inputs, double* outputs)
         {
             double sum = 0;
             for(size_t done_i = 0; done_i <done->nb_neurons; done_i++)
-                sum += done->errors[done_i] * done->weights[get_w(done, done_i, current_i)];
-            current->errors[current_i] = sigmoid_prime(current->outputs[current_i]) * sum;
+                sum += done->errors[done_i] *
+                 done->weights[get_w(done, done_i, current_i)];
+            current->errors[current_i] = 
+            sigmoid_prime(current->outputs[current_i]) * sum;
         }
     }
 
@@ -93,7 +97,8 @@ void backward_prop(struct Network network)
             for(size_t done_i = 0; done_i < done->nb_neurons; done_i++)
             {
                 size_t j = get_w(current, current_i, done_i);
-                double deltaw = l_rate * current->errors[current_i] * done->outputs[done_i];
+                double deltaw = 
+                l_rate * current->errors[current_i] * done->outputs[done_i];
                 current->weights[j] += deltaw + 0.1 * current->previous_dw[j];
                 current->previous_dw[j] = deltaw;
             }
@@ -112,7 +117,8 @@ double* output_network(struct Network network)
     return layer->outputs;
 }
 
-void train_network(struct Network network, struct Training training, int print, char string[])
+void train_network(struct Network network, struct Training training,
+ int print, char string[])
 {
     /*
     train the network for training.nb_set iterations,
@@ -122,14 +128,16 @@ void train_network(struct Network network, struct Training training, int print, 
     size_t i = 0;
     for(; i < training.nb_set; i++)
     {
-        forward_prop(network, training_in(&training, i), training_out(&training, i));
+        forward_prop(network, training_in(&training, i),
+         training_out(&training, i));
         backward_prop(network);
         if(print)
             print_training(network, training, i, string);
     }
 }
 
-void print_training(struct Network network,struct Training training, size_t i, char* string)
+void print_training(struct Network network,struct Training training,
+ size_t i, char* string)
 {
     /*
     print the training.
@@ -140,7 +148,8 @@ void print_training(struct Network network,struct Training training, size_t i, c
         printf("\033[0;31m%.1f", array[j]);
     printf(" \033[0;37m) ");
     for(size_t j = 0; j < training.nb_out; j++)
-        printf(" \033[0;32m%f ", network.layers[network.nb_layers - 1].outputs[j]);
+        printf(" \033[0;32m%f ", 
+            network.layers[network.nb_layers - 1].outputs[j]);
     printf("\033[0;37m<- ");
     array = training_in(&training, i);
     for(size_t j = 0; j < training.nb_in - 1; j++)
