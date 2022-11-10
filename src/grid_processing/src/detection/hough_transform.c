@@ -235,7 +235,6 @@ SDL_Surface* hough_transform_rotate(SDL_Surface* edge_surface, SDL_Surface** bin
      lines = simplify_line(lines,&nb);
      int alpha = get_angle(lines,nb);
      int angle = alpha%90;
-     printf("%d\n",angle);
      if ((angle >= 70 && angle <= 110) || (angle >= -20 && angle <= 20))
 	  alpha = 0;
 
