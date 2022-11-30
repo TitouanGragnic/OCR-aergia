@@ -100,6 +100,8 @@ int main(int argc, char *argv[])
 
     // ----------------------Hough_Transform_Rotate----------------------------
     edge_surface = hough_transform_rotate(edge_surface,&bin_surface);
+    SDL_SaveBMP(edge_surface, "output/treatment/rotate.png");
+
     if(dev_mod)
     {
         printf("process finish\n");
@@ -109,13 +111,13 @@ int main(int argc, char *argv[])
     // ----------------------Blob_detection------------------------------------
     blob result = blobFromImage(edge_surface);
 
-
     if(dev_mod)
         screen_surface = display_image(edge_surface);
 
     // ----------------------Scale---------------------------------------------
     edge_surface = scale(edge_surface, result.min_x, result.min_y, result.max_x,result.max_y);
     bin_surface = scale(bin_surface, result.min_x, result.min_y, result.max_x,result.max_y);
+    SDL_SaveBMP(bin_surface, "output/treatment/scale.png");
 
     if(dev_mod)
         screen_surface = display_image(edge_surface);
@@ -125,6 +127,7 @@ int main(int argc, char *argv[])
 
     // ----------------------Correct_Perspective-------------------------------
     bin_surface = correct_perspective(edge_surface, bin_surface);
+    SDL_SaveBMP(bin_surface, "output/treatment/perspective.png");
     if(dev_mod)
     {
         screen_surface = display_image(bin_surface);
