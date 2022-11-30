@@ -26,11 +26,12 @@ SDL_Surface *rotate(SDL_Surface *img, double alpha, struct line *line, int len, 
 	       }
 	  }
      }
-
+     
      //init value to calculate new coordonate
      int midx = w/2;
      int midy = h/2;
      int mid = newLong/2;
+     
 
      for(int y = 0;y<h;y++){
 	  for(int x = 0;x<w;x++){

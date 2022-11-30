@@ -79,5 +79,7 @@ SDL_Surface *ligne_bleu(SDL_Surface* img, int t)
 	       dotBlue(img1,w,h,i,j);
 	  }
      }
+     SDL_FreeSurface(img);
+     printf("probleme ici\n");
      return img1;
 }
