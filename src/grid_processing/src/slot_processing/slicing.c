@@ -50,5 +50,6 @@ void slicing(SDL_Surface* main_surface)
 	}
     }
     SDL_FreeSurface(result_surface);
+    SDL_FreeSurface(edge_surface);
     SDL_FreeSurface(main_surface);
 }
