@@ -2,9 +2,7 @@
 
 #define M_PI       3.14159265358979323846
 
-
-
-SDL_Surface *rotate(SDL_Surface *img, double alpha, struct line *line, int len, int var)
+SDL_Surface *rotate(SDL_Surface *img, double alpha, int var)
 {
      //init future pixel, width end height
      Uint32 pixel;
@@ -26,13 +24,10 @@ SDL_Surface *rotate(SDL_Surface *img, double alpha, struct line *line, int len, 
 	       }
 	  }
      }
-     
      //init value to calculate new coordonate
      int midx = w/2;
      int midy = h/2;
      int mid = newLong/2;
-     
-
      for(int y = 0;y<h;y++){
 	  for(int x = 0;x<w;x++){
 	       int i = (x-midx)*cos(alpha)+(y-midy)*sin(alpha)+mid;//calculation of new coordonee
@@ -41,18 +36,6 @@ SDL_Surface *rotate(SDL_Surface *img, double alpha, struct line *line, int len, 
 	       put_pixel(result,i,j,pixel);//put pixel in new location
 	  }
      }
-     for(int i = 0;i<len;i++)//rotate list of line too
-       {
-       int x1 = line[i].x1;
-       int x2 = line[i].x2;
-       int y1 = line[i].y1;
-       int y2 = line[i].y2;
-
-       line[i].x1 = (x1-midx)*cos(alpha)+(y1-midy)*sin(alpha)+mid;
-       line[i].x2 = (x2-midx)*cos(alpha)+(y2-midy)*sin(alpha)+mid;
-       line[i].y1 = -(x1-midx)*sin(alpha)+(y1-midy)*cos(alpha)+mid;
-       line[i].y2 = -(x2-midx)*sin(alpha)+(y2-midy)*cos(alpha)+mid;
-       }
      SDL_FreeSurface(img);//free memory
      return result;
 }

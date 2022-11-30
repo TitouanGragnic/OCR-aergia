@@ -39,47 +39,48 @@ int find_max(int* matr,int len)
      return max;
 }
 
-struct line* find_line(int* matr,int len,int nb,int w,int h,int max)
+list_l* find_line(int* matr,int len,int w,int h,int max)
 {
-     /*
-       return list of lines
-     */
-     struct line* res = malloc(nb*sizeof(struct line));
-     int i = 0;
-     for(int p =0;p<len;p++)
-	  for(int t = 0; t<360;t++)
-	       if(matr[p*360+t]>max*0.6)
-	       {
-		    double theta = (double)t*(M_PI/180);
-		    double k=-cos(theta)/sin(theta);
-		    res[i].y1 = p/sin(theta);
-		    res[i].y2 = k*w + p/sin(theta);
-		    if(fabs(res[i].y1)<w*h && fabs(res[i].y2)<w*h)
-		    {
-			 res[i].x1 = 0;
-			 res[i].x2 = w;
-		    }
-		    else
-		    {
-			 k = -sin(theta)/cos(theta);
-			 res[i].x1 =  p/cos(theta);
-			 res[i].x2 = k*h+ p/cos(theta);
-			 res[i].y1 = 0;
-			 res[i].y2 = h;
-		    }
-		    i+=1;
-	       }
-     return res;
+    /*
+      return list of lines
+    */
+    list_l* res = NULL;
+    for(int p =0;p<len;p++)
+        for(int t = 0; t<360;t++)
+            if(matr[p*360+t]>max*0.6)
+            {
+                line tmp;
+                double theta = (double)t*(M_PI/180);
+                double k=-cos(theta)/sin(theta);
+                tmp.y1 = p/sin(theta);
+                tmp.y2 = k*w + p/sin(theta);
+                if(fabs(tmp.y1)<w*h && fabs(tmp.y2)<w*h)
+                {
+                    tmp.x1 = 0;
+                    tmp.x2 = w;
+                }
+                else
+                {
+                    k = -sin(theta)/cos(theta);
+                    tmp.x1 =  p/cos(theta);
+                    tmp.x2 = k*h+ p/cos(theta);
+                    tmp.y1 = 0;
+                    tmp.y2 = h;
+                }
+                res = append_linked_list_l(res,tmp);
+            }
+    return res;
 }
-
-struct line* append_line(struct line* tab,int len,struct line l)
+/*
+line* append_line(line* tab,int len, line l)
 {
-     struct line* res = realloc(tab,(len+1)*sizeof(struct line));
+    line* res = realloc(tab,(len+1)*sizeof(line));
      res[len] = l;
      return res;
 }
+*/
 
-int same_line(struct line l1,struct line l2)
+int same_line(line l1, line l2)
 {
      /*
        return l1~l2
@@ -88,54 +89,49 @@ int same_line(struct line l1,struct line l2)
 	  fabs(l1.y1-l2.y1)<50 && fabs(l1.y2-l2.y2)<50;
 }
 
-struct line* simplify_line(struct line* tab,int *len)
+list_l* simplify_line(list_l* tab)
 {
-     /*
-       merge line ~equale in tab and return the new tab
-     */
-     int* states = calloc(*len,sizeof(int));
-     int size = 0;
-     struct line* res= malloc(0);
-     int i = 0;
-     while(i<*len)
-     {
-	  if(!states[i])
-	  {
-	       int nb = 1;
-	       struct line sum;
-	       sum.x1=tab[i].x1;
-	       sum.x2=tab[i].x2;
-	       sum.y1=tab[i].y1;
-	       sum.y2=tab[i].y2;
-	       int j = i+1;
-	       states[i] = 1;
-
-	       while(j<*len)
-	       {
-		    if(!states[j] && same_line(tab[i],tab[j]))
-		    {
-			 nb++;
-			 sum.x1+=tab[j].x1;
-			 sum.x2+=tab[j].x2;
-			 sum.y1+=tab[j].y1;
-			 sum.y2+=tab[j].y2;
-			 states[j] = 1;
-		    }
-		    j++;
-	       }
-	       sum.x1/=nb;
-	       sum.x2/=nb;
-	       sum.y1/=nb;
-	       sum.y2/=nb;
-	       res = append_line(res,size, sum);
-	       size+=1;
-	  }
-	  i++;
-     }
-     free(tab);
-     free(states);
-     *len = size;
-     return res;
+    /*
+      merge line ~equale in tab and return the new tab
+    */
+    list_l* tmp = tab;
+    while(tmp != NULL)
+    {
+        int nb = 1;
+        line sum;
+        sum.x1=tmp->value.x1;
+        sum.x2=tmp->value.x2;
+        sum.y1=tmp->value.y1;
+        sum.y2=tmp->value.y2;
+        list_l* pred = tmp;
+        list_l* tmp2 = tmp->next;
+        while(tmp2 != NULL)
+        {
+            if(same_line(tmp->value,tmp2->value))
+            {
+                nb++;
+                sum.x1+=tmp2->value.x1;
+                sum.x2+=tmp2->value.x2;
+                sum.y1+=tmp2->value.y1;
+                sum.y2+=tmp2->value.y2;
+                pred->next = tmp2->next;
+                free(tmp2);
+                tmp2 = pred->next;
+            }
+            else
+            {
+                pred = tmp2;
+                tmp2 = tmp2->next;
+            }
+        }
+        sum.x1/=nb;
+        sum.x2/=nb;
+        sum.y1/=nb;
+        sum.y2/=nb;
+        tmp->value = sum;
+        tmp = tmp->next;
+    }
+    return tab;
 }
 
 void draw_line_polaire(SDL_Surface* img,int p, int t)
@@ -178,7 +174,7 @@ int draw_lines_polaire(SDL_Surface* img, int* matr,int len,int var,int max)
      return nb;
 }
 
-void draw_simple_line(SDL_Surface* img, struct line* tab,int len)
+void draw_simple_line(SDL_Surface* img,  line* tab,int len)
 {
      /*
        draw each line of tab
@@ -197,14 +193,18 @@ double __get_angle(int x1, int y1, int x2 , int y2)
      return atan(b/a);
 }
 
-int get_angle(struct line* tab,int len)
+int get_angle(list_l* tab)
 {
      /*
        get angle with most occurence in tab of line
      */
      int* histo = calloc(360,sizeof(int));
-     for(int i = 0; i<len; i++)
-	  histo[((int)(__get_angle(tab[i].x1,tab[i].y1,tab[i].x2,tab[i].y2)*180/M_PI))%90]+=1;
+     while(tab != NULL)
+     {
+         histo[((int)(__get_angle(tab->value.x1,tab->value.y1,
+                                  tab->value.x2,tab->value.y2)*180/M_PI))%90]+=1;
+         tab = tab->next;
+     }
      int max=0;
      for(int i = 0; i<360; i++)
 	  max = max<histo[i]? i :max;
@@ -230,19 +230,17 @@ SDL_Surface* hough_transform_rotate(SDL_Surface* edge_surface, SDL_Surface** bin
      hough_transform(edge_surface,matr);
      int max = find_max(matr, lenght);
 
-     int nb = draw_lines_polaire(edge_surface, matr, lenght,0,max);
-     struct line* lines = find_line( matr, lenght, nb,w,h,max);
-     lines = simplify_line(lines,&nb);
-     int alpha = get_angle(lines,nb);
+     //int nb = draw_lines_polaire(edge_surface, matr, lenght,0,max);
+     list_l* lines = find_line( matr, lenght,w,h,max);
+     lines = simplify_line(lines);
+     int alpha = get_angle(lines);
      int angle = alpha%90;
-     printf("%d\n",angle);
      if ((angle >= 70 && angle <= 110) || (angle >= -20 && angle <= 20))
 	  alpha = 0;
 
-     edge_surface = rotate(edge_surface,alpha,lines,nb,0);
-     *bin_surface = rotate(*bin_surface,alpha,lines,nb,1);
+     edge_surface = rotate(edge_surface,alpha,0);
+     *bin_surface = rotate(*bin_surface,alpha,1);
      free(matr);
-     free(lines);
+     free_linked_list_l(lines);
      return edge_surface;
 }
-

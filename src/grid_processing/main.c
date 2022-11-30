@@ -25,101 +25,118 @@ struct carth{
     int y;
 };
 
-
-
 int main(int argc, char *argv[])
 {
-     //read file
-     if(argc != 2)
-	  errx(1, "Type wanted is : ./out file.png\n");
+    // ----------------------Assert---------------------------------------------
+    if(argc != 2)
+        errx(1, "Type wanted is : ./out file.png\n");
 
-     SDL_Surface* edge_surface;
-     SDL_Surface* bin_surface;
-     SDL_Surface* screen_surface;
-     int max;
+    SDL_Surface* edge_surface;
+    SDL_Surface* bin_surface;
+    SDL_Surface* screen_surface;
+    int max;
+    int dev_mod = 1;
 
-     // : Initialize the SDL
-     init_sdl();
+    // : Initialize the SDL
+    init_sdl();
 
-     edge_surface = load_image(argv[1]);
+    // ----------------------Load_Image_and_resize------------------------------
+    edge_surface = load_image(argv[1]);
 
-     if(edge_surface->w > 1024 ||edge_surface->h > 1024)
-	  edge_surface = resize(edge_surface);
+    if(edge_surface->w > 1024 ||edge_surface->h > 1024)
+        edge_surface = resize(edge_surface);
 
-     // : Display the image.
-     grayscale(edge_surface);
-     screen_surface = display_image(edge_surface);
-     //wait_for_keypressed();
+    // ----------------------Grayscale-----------------------------------------
+    grayscale(edge_surface);
+    SDL_SaveBMP(edge_surface, "output/treatment/grayscale.png");
 
-     max = increase_contrast(edge_surface,10);
-     screen_surface = display_image(edge_surface);
-     //wait_for_keypressed();
+    if(dev_mod)
+        screen_surface = display_image(edge_surface);
 
-     brightness(edge_surface,max);
-     screen_surface = display_image(edge_surface);
-     //wait_for_keypressed();
+    // ----------------------Increase_Contrast---------------------------------
+    max = increase_contrast(edge_surface,10);
+    SDL_SaveBMP(edge_surface, "output/treatment/contrast.png");
 
-     edge_surface = reduce_noise(edge_surface);
-     screen_surface = display_image(edge_surface);
-     //wait_for_keypressed();
+    if(dev_mod)
+        screen_surface = display_image(edge_surface);
 
-     edge_surface = blur(edge_surface);
-     screen_surface = display_image(edge_surface);
-     //wait_for_keypressed();
+    // ----------------------Brightness----------------------------------------
+    brightness(edge_surface,max);
+    SDL_SaveBMP(edge_surface, "output/treatment/brightness.png");
 
-     int noise_level = noise(edge_surface, edge_surface->w,edge_surface->h);
-     //printf("%d \n",noise);
-     adaptive_threshold(edge_surface, noise_level > 300 ? 0.5 : 0.15,32);
+    if(dev_mod)
+        screen_surface = display_image(edge_surface);
 
-     //edge_surface = lissage(edge_surface);
-     SDL_SaveBMP(edge_surface, "output/binary.png");
+    // ----------------------Reduce_Noise--------------------------------------
+    edge_surface = reduce_noise(edge_surface);
+    SDL_SaveBMP(edge_surface, "output/treatment/noise.png");
 
-     screen_surface = display_image(edge_surface);
-     //wait_for_keypressed();
+    if(dev_mod)
+        screen_surface = display_image(edge_surface);
 
-     edge_surface = Sobel(edge_surface);
-     screen_surface = display_image(edge_surface);
-     //wait_for_keypressed();
+    // ----------------------Blur----------------------------------------------
+    edge_surface = blur(edge_surface);
+    SDL_SaveBMP(edge_surface, "output/treatment/blur.png");
 
-     bin_surface = load_image("output/binary.png");
+    if(dev_mod)
+        screen_surface = display_image(edge_surface);
 
-     SDL_Surface** bin_surfaceP = &bin_surface;
-     edge_surface = hough_transform_rotate(edge_surface,bin_surfaceP);
-     bin_surface = *bin_surfaceP;
+    // ----------------------Adaptive_Threshold--------------------------------
+    int noise_level = noise(edge_surface, edge_surface->w,edge_surface->h);
+    adaptive_threshold(edge_surface, noise_level > 300 ? 0.5 : 0.15,32);
+    SDL_SaveBMP(edge_surface, "output/treatment/threshold.png");
 
-     printf("process finish\n");
-     screen_surface = display_image(edge_surface);
-     //wait_for_keypressed();
+    if(dev_mod)
+        screen_surface = display_image(edge_surface);
 
-     struct blob *blobs = malloc(0*sizeof(struct blob));
-     struct blob **B = &blobs;
+    // ----------------------Sobel---------------------------------------------
+    edge_surface = Sobel(edge_surface);
+    SDL_SaveBMP(edge_surface, "output/treatment/sobel.png");
 
-     struct blob result = blobFromImage(edge_surface, B);
-     blobs = *B;
+    if(dev_mod)
+        screen_surface = display_image(edge_surface);
 
-     screen_surface = display_image(edge_surface);
-     //wait_for_keypressed();
+    bin_surface = load_image("output//treatment/threshold.png");
 
-     edge_surface = scale(edge_surface, result.min_x, result.min_y, result.max_x,result.max_y);
-     bin_surface = scale(bin_surface, result.min_x, result.min_y, result.max_x,result.max_y);
+    // ----------------------Hough_Transform_Rotate----------------------------
+    edge_surface = hough_transform_rotate(edge_surface,&bin_surface);
+    if(dev_mod)
+    {
+        printf("process finish\n");
+        screen_surface = display_image(edge_surface);
+    }
 
-     screen_surface = display_image(edge_surface);
-     //wait_for_keypressed();
+    // ----------------------Blob_detection------------------------------------
+    blob result = blobFromImage(edge_surface);
 
-     screen_surface = display_image(bin_surface);
-     //wait_for_keypressed();
 
-     bin_surface = correct_perspective(edge_surface, bin_surface);
-     screen_surface = display_image(bin_surface);
-     printf("detection finish\n");
-     wait_for_keypressed();
+    if(dev_mod)
+        screen_surface = display_image(edge_surface);
 
-    // : Free the image surface.
-    // : Free the screen surface.
+    // ----------------------Scale---------------------------------------------
+    edge_surface = scale(edge_surface, result.min_x, result.min_y, result.max_x,result.max_y);
+    bin_surface = scale(bin_surface, result.min_x, result.min_y, result.max_x,result.max_y);
+
+    if(dev_mod)
+        screen_surface = display_image(edge_surface);
+
+    if(dev_mod)
+        screen_surface = display_image(bin_surface);
+
+    // ----------------------Correct_Perspective-------------------------------
+    bin_surface = correct_perspective(edge_surface, bin_surface);
+    if(dev_mod)
+    {
+        screen_surface = display_image(bin_surface);
+        printf("detection finish\n");
+        wait_for_keypressed();
+    }
+
+    // ----------------------Free----------------------------------------------
+
     SDL_FreeSurface(bin_surface);
     SDL_FreeSurface(edge_surface);
-    SDL_FreeSurface(screen_surface);
-
-    free(blobs);
+    if(dev_mod)
+        SDL_FreeSurface(screen_surface);
     return 0;
 }

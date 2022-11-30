@@ -9,6 +9,9 @@ struct corner{
 
 double **allocMat(int size)
 {
+     /*
+       return an allocation for a matrice(sizexsize)
+     */
     double **mat = calloc(size, sizeof(double *));
     for (int i = 0; i < size; i++)
     {
@@ -17,13 +20,17 @@ double **allocMat(int size)
     return mat;
 }
 
-void mult_mat(double **mat, double *v, double *v_out, int size)
+void mult_mat(double **mat, double *v, double *tab_out, int size)
 {
+     /*
+       multiply all the value in mat and v
+       put the sum of this in v_out
+      */
     for (int i = 0; i < size; i++)
     {
         for (int j = 0; j < size; j++)
         {
-            v_out[i] += mat[i][j] * v[j];
+            tab_out[i] += mat[i][j] * v[j];
         }
     }
 }
@@ -72,6 +79,9 @@ double determinant(double matrice[9][9], int n)
 
 void adjoint(double matrice[9][9], double adj[9][9])
 {
+     /*
+       return matrice adjoint to matrice
+     */
      int sign = -1;
      double temp[9][9];
 
@@ -88,6 +98,9 @@ void adjoint(double matrice[9][9], double adj[9][9])
 
 void inverse(double matrice[9][9], double inverse[9][9])
 {
+     /*
+       fill inverse matrice from matrice
+      */
      int det = determinant(matrice,9);
      double adj[9][9];
      adjoint(matrice, adj);
@@ -103,25 +116,34 @@ void inverse(double matrice[9][9], double inverse[9][9])
 
 void inverse_mat(double matrice[9][9], double inv[9][9])
 {
+     /*
+       launch process to inverse matrice
+      */
     double adj[9][9];
     adjoint(matrice, adj);
     inverse(matrice, inv);
 }
 
-void multiplyMatStat(double M[][9], double v[9], double v_out[9],
-                     int size)
+void mult_mat_np(double mat[][9], double v[9], double tab_out[9], int size)
 {
+     /*
+       multiply all the value in mat and v
+       put the sum of this in v_out
+      */
      for (int i = 0; i < size; i++)
      {
 	  for (int j = 0; j < size; j++)
 	  {
-	       v_out[i] += M[i][j] * v[j];
+	       tab_out[i] += mat[i][j] * v[j];
 	  }
      }
 }
 
 double max(double value, double value1)
 {
+     /*
+       return max value between two
+      */
      if(value >value1)
 	  return value;
      return value1;
@@ -129,6 +151,9 @@ double max(double value, double value1)
 
 void inverse_mat3(double **mat, double **m_inv)
 {
+     /*
+       inverse 3x3 matrice with precalculate formule 
+      */
      double divisor =
 	  mat[0][0] * mat[1][1] * mat[2][2] + mat[0][1] * mat[1][2] * mat[2][0]
 	  + mat[0][2] * mat[2][1] * mat[1][0] - mat[0][2] * mat[1][1] * mat[2][0]
@@ -150,9 +175,12 @@ void inverse_mat3(double **mat, double **m_inv)
 	       m_inv[i][j] = new_mat[i][j] / divisor;
 }
 
-void perspectiveMatrix(int src[4][2], double dst[4][2], double **matr, double **matr_inv)
+void perspective_mat(int src[4][2], double dst[4][2], double **matr, double **matr_inv)
 {
-     double P[][9] = {
+     /*
+       find result of inequation between matrice to find all the new coordonate
+      */
+     double to_invert[][9] = {
 	  { -src[0][0], -src[0][1], -1, 0, 0, 0, src[0][0] * dst[0][0],
 	    src[0][1] * dst[0][0], dst[0][0] },
 	  { 0, 0, 0, -src[0][0], -src[0][1], -1, src[0][0] * dst[0][1],
@@ -172,30 +200,33 @@ void perspectiveMatrix(int src[4][2], double dst[4][2], double **matr, double **
 	  { 0, 0, 0, 0, 0, 0, 0, 0, 1 }
      };
 
-     double R[9] = { 0, 0, 0, 0, 0, 0, 0, 0, 1 };
+     double res[9] = { 0, 0, 0, 0, 0, 0, 0, 0, 1 };
 
-     double P_inv[9][9] = { 0 };
-     //inverse P in P_inv
-     inverse_mat(P,P_inv);
+     double invert[9][9] = { 0 };
+     //inverse to_invert in invert
+     inverse_mat(to_invert,invert);
 
-     double *H = calloc(9, sizeof(double));
-     //mult P_inv with R and H
-     multiplyMatStat(P_inv,R,H,9);
+     double *unknow = calloc(9, sizeof(double));
+     //mult invert with res and unknow
+     mult_mat_np(invert,res,unknow,9);
      int v = 0;
      for(int i = 0; i<3;i++)
      {
 	  for(int j = 0; j<3; j++)
 	  {
-	       matr[i][j] = H[v];
+	       matr[i][j] = unknow[v];
 	       v+=1;
 	  }
      }
      inverse_mat3(matr, matr_inv);
-     free(H);
+     free(unknow);
 }
 
 struct corner find_corner(SDL_Surface *img)
 {
+     /*
+       Find the 4 white points closest to the corners of the image
+      */
      Uint32 pixel;
      Uint8 r,g,b;
 
@@ -245,6 +276,11 @@ struct corner find_corner(SDL_Surface *img)
 
 SDL_Surface *correct_perspective(SDL_Surface *img, SDL_Surface *resultat)
 {
+     /*
+       rectifies the perspective of the image so that our grid is straight
+       -img is for the research
+       -resultat is the reserve of pixel to reput
+      */
      Uint32 pixel;
      Uint32 newpixel;
 
@@ -275,7 +311,7 @@ SDL_Surface *correct_perspective(SDL_Surface *img, SDL_Surface *resultat)
      double **result_mat_inv = allocMat(3);
 
      //Perspective matrix
-     perspectiveMatrix(base_coor, distance, result_mat, result_mat_inv);
+     perspective_mat(base_coor, distance, result_mat, result_mat_inv);
 
      SDL_Surface *result = SDL_CreateRGBSurface(0,img->w,img->h,32,0,0,0,0);
 
