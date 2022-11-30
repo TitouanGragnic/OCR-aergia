@@ -20,6 +20,8 @@
 #include "include/detection/hough_transform.h"
 #include "include/detection/distorsion.h"
 
+#include "include/slot_processing/slicing.h"
+
 struct carth{
     int x;
     int y;
@@ -77,7 +79,7 @@ int main(int argc, char *argv[])
      screen_surface = display_image(edge_surface);
      //wait_for_keypressed();
 
-     edge_surface = Sobel(edge_surface);
+     edge_surface = Sobel(edge_surface, 1);
      screen_surface = display_image(edge_surface);
      //wait_for_keypressed();
 
@@ -94,7 +96,7 @@ int main(int argc, char *argv[])
      struct blob *blobs = malloc(0*sizeof(struct blob));
      struct blob **B = &blobs;
 
-     struct blob result = blobFromImage(edge_surface, B);
+     struct blob result = blobFromImage(edge_surface, B, 10000);
      blobs = *B;
 
      screen_surface = display_image(edge_surface);
@@ -112,6 +114,7 @@ int main(int argc, char *argv[])
      bin_surface = correct_perspective(edge_surface, bin_surface);
      screen_surface = display_image(bin_surface);
      printf("detection finish\n");
+     slicing(bin_surface);
      wait_for_keypressed();
 
     // : Free the image surface.

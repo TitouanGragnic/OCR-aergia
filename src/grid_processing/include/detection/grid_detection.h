@@ -16,6 +16,6 @@ struct coor
 {
     int x,y;
 };
-struct blob blobFromImage(SDL_Surface *img, struct blob **blobs);
+struct blob blobFromImage(SDL_Surface *img, struct blob **blobs, int size);
 
 #endif

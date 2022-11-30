@@ -27,7 +27,7 @@ struct coor *suppr(struct coor *tab, int len)
 }
 
 
-struct blob blobFromImage(SDL_Surface *img, struct blob **blobs)
+struct blob blobFromImage(SDL_Surface *img, struct blob **blobs, int size)
 {
      Uint32 pixel;
      Uint8 r,g,b;
@@ -90,6 +90,8 @@ struct blob blobFromImage(SDL_Surface *img, struct blob **blobs)
 		    {
 			 for(int l = top.x-1;l<=top.x+1;l++)
 			 {
+                             if(l<0 || k<0 || l>= w || k>= h)
+                                 continue;
 			      pixel = get_pixel(img, l, k);
 			      SDL_GetRGB(pixel, img->format, &r, &g, &b);
 			      if(r == 0 || matr[l*h+k] > -1)
@@ -103,7 +105,7 @@ struct blob blobFromImage(SDL_Surface *img, struct blob **blobs)
 			 }
 		    }
 	       }
-	       if(n_pixels < 1000)
+	       if(n_pixels < size)
 		    continue;
 	       struct blob nextcentre =
 		    {min_x,max_x,
@@ -142,6 +144,3 @@ struct blob blobFromImage(SDL_Surface *img, struct blob **blobs)
      free(matr);
      return maxi;
 }
-
-
-
