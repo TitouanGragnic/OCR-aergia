@@ -20,6 +20,8 @@
 #include "include/detection/hough_transform.h"
 #include "include/detection/distorsion.h"
 
+#include "include/slot_processing/slicing.h"
+
 struct carth{
     int x;
     int y;
@@ -90,7 +92,7 @@ int main(int argc, char *argv[])
         screen_surface = display_image(edge_surface);
 
     // ----------------------Sobel---------------------------------------------
-    edge_surface = Sobel(edge_surface);
+    edge_surface = Sobel(edge_surface, 1);
     SDL_SaveBMP(edge_surface, "output/treatment/sobel.png");
 
     if(dev_mod)
@@ -109,7 +111,7 @@ int main(int argc, char *argv[])
     }
 
     // ----------------------Blob_detection------------------------------------
-    blob result = blobFromImage(edge_surface);
+    blob result = blobFromImage(edge_surface, 10000);
 
     if(dev_mod)
         screen_surface = display_image(edge_surface);
@@ -135,8 +137,9 @@ int main(int argc, char *argv[])
         wait_for_keypressed();
     }
 
-    // ----------------------Free----------------------------------------------
+    slicing(bin_surface);
 
+    // ----------------------Free----------------------------------------------
     SDL_FreeSurface(bin_surface);
     SDL_FreeSurface(edge_surface);
     if(dev_mod)

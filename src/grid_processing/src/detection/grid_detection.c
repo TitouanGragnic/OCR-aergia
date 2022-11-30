@@ -1,7 +1,6 @@
 #include "../../include/detection/grid_detection.h"
 
-
-blob blobFromImage(SDL_Surface *img)
+blob blobFromImage(SDL_Surface *img, int size)
 {
      Uint32 pixel;
      Uint8 r,g,b;
@@ -56,6 +55,8 @@ blob blobFromImage(SDL_Surface *img)
 		    {
 			 for(int l = top.x-1;l<=top.x+1;l++)
 			 {
+                             if(l<0 || k<0 || l>= w || k>= h)
+                                 continue;
 			      pixel = get_pixel(img, l, k);
 			      SDL_GetRGB(pixel, img->format, &r, &g, &b);
 			      if(r == 0 || matr[l*h+k] > -1)
@@ -68,7 +69,7 @@ blob blobFromImage(SDL_Surface *img)
 			 }
 		    }
 	       }
-	       if(n_pixels < 1000)
+	       if(n_pixels < size)
 		    continue;
 	       blob nextcentre =
 		    {min_x,max_x,

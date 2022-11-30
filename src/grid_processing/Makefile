@@ -19,5 +19,7 @@ ${EXEC}:${OBJ}
 clean:
 	${RM} ${OBJ} ${SRC:.c=.d}
 	${RM} ${EXEC}
+	${RM} output/slot/*.png
+	${RM} output/treatment/*.png
 
 # END
