@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
     if(dev_mod)
         screen_surface = display_image(edge_surface);
 
-    bin_surface = load_image("output//treatment/threshold.png");
+    bin_surface = load_image("output/treatment/threshold.png");
 
     // ----------------------Hough_Transform_Rotate----------------------------
     edge_surface = hough_transform_rotate(edge_surface,&bin_surface);
