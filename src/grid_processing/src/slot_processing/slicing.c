@@ -73,10 +73,9 @@ void slicing(SDL_Surface* main_surface)
             file_name[16] = '0'+number/10;
             file_name[17] = '0'+number%10;
             SDL_SaveBMP(slot_surface, file_name);
-            printf("%d \n", number);
             number++;
+	    SDL_FreeSurface(slot_surface);
 	}
     }
-    SDL_FreeSurface(slot_surface);
     SDL_FreeSurface(main_surface);
 }
