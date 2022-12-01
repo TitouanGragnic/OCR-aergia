@@ -7,11 +7,11 @@ int get_new_value(SDL_Surface *img,int i, int j)
       */
     int w = img->w;
     int h = img -> h;
-     if(pixelValue(i, j, img) != 0)
+    if(pixel_value( img, i, j) != 0)
 	  return 1;
      for(int di = -1;di<2;di+=2)
 	  for(int dj = -1;dj<2;dj+=2)
-	       if ( i+di>0 && i+di<w && j+dj>0 && j+dj<h &&   pixelValue(i+di, j+dj, img) != 0)
+              if ( i+di>0 && i+di<w && j+dj>0 && j+dj<h && pixel_value( img, i+di, j+dj) != 0)
 		    return 0;
      return 1;
 }
