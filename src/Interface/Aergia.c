@@ -58,8 +58,11 @@ void load(GtkButton* button, gpointer data)
       pixbuf = gdk_pixbuf_scale_simple(pixbuf, 650, 650, GDK_INTERP_BILINEAR);
       gtk_image_set_from_pixbuf(GTK_IMAGE(aergia->image),pixbuf);
       //treatment here
-
-
+      /*
+      char commande[40];
+      sprintf(commande, "C:\Users\Documents\Lanceur.exe");
+      system(commande);
+      */
       gtk_widget_set_sensitive(aergia->step_button,TRUE);
       gtk_widget_set_sensitive(GTK_WIDGET(aergia->end_button),TRUE);
       
