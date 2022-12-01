@@ -68,7 +68,6 @@ SDL_Surface* resize_slot(SDL_Surface* start_surface)
         for(int j = 0; j< 16; j++)
         {
             newPixel =get_average_color(start_surface,i*s,j*s,s,start_surface->format);
-		 
             put_pixel(resize_surface,i,j,newPixel);
 
         }

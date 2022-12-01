@@ -30,14 +30,14 @@ struct carth{
 int main(int argc, char *argv[])
 {
     // ----------------------Assert---------------------------------------------
-    if(argc != 2)
-        errx(1, "Type wanted is : ./out file.png\n");
+    if(argc > 3 || argc == 1)
+        errx(1, "Type wanted is : ./out file.png dev_mod\n");
 
     SDL_Surface* edge_surface;
     SDL_Surface* bin_surface;
     SDL_Surface* screen_surface;
     int max;
-    int dev_mod = 1;
+    int dev_mod = argc !=3;
 
     // : Initialize the SDL
     init_sdl();
