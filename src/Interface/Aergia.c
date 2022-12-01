@@ -28,10 +28,14 @@ void load(GtkButton* button, gpointer data)
   GdkPixbuf *pixbuf;
   GtkWidget *empty;
   
-  GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
   gint res;
 
-  dialog = gtk_file_chooser_dialog_new ("Open File",
+  GtkFileFilter *filter = gtk_file_filter_new();
+
+  gtk_file_filter_add_pixbuf_formats (filter);
+
+    
+  dialog = gtk_file_chooser_dialog_new ("Choose a sudoku image",
 					NULL,
 					GTK_FILE_CHOOSER_ACTION_OPEN,
 					"Cancel",
@@ -40,6 +44,8 @@ void load(GtkButton* button, gpointer data)
 					GTK_RESPONSE_ACCEPT,
 					NULL);
 
+
+  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER(dialog),filter);
   res = gtk_dialog_run (GTK_DIALOG (dialog));
   if (res == GTK_RESPONSE_ACCEPT)
     {
@@ -55,6 +61,7 @@ void load(GtkButton* button, gpointer data)
 
 
       gtk_widget_set_sensitive(aergia->step_button,TRUE);
+      gtk_widget_set_sensitive(GTK_WIDGET(aergia->end_button),TRUE);
       
       //free
       g_free (filename);
@@ -66,7 +73,7 @@ void load(GtkButton* button, gpointer data)
 
 }
 
-void side_buttons(Aergia aergia,int w, int h)//contains logo too
+void side_buttons(Aergia aergia,int w)//contains logo too
 {
   /*
   creates the buttons
@@ -105,6 +112,8 @@ int main(int argc, char **argv)
 {
   int width = 1000;
   int height = 800;
+
+  GdkRGBA bgcolor = {0.40,0.60,0.63,1};
   
   gtk_init(&argc, &argv);
   
@@ -119,7 +128,7 @@ int main(int argc, char **argv)
 
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   
-  gtk_window_set_title(GTK_WINDOW(window),"Aergia 0.1");//change window title here
+  gtk_window_set_title(GTK_WINDOW(window),"Aergia 0.4");//change window title here
   gtk_window_set_default_size(GTK_WINDOW(window), width, height);
   gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
   //gtk_window_set_resizable(GTK_WINDOW(window),FALSE); //disable resize
@@ -136,8 +145,6 @@ int main(int argc, char **argv)
 
   GtkWidget *empty = gtk_image_new_from_file("empty.png");
 
-  //gtk_box_set_homogeneous(GTK_BOX(box_buttons), TRUE);
-
   //buttons
   load_button = gtk_button_new_with_label("Load image");
   step_button = gtk_button_new_with_label("Next Step");
@@ -148,6 +155,7 @@ int main(int argc, char **argv)
   gtk_widget_set_size_request(GTK_WIDGET(end_button),200,50);
 
   gtk_widget_set_sensitive(GTK_WIDGET(step_button),FALSE);
+  gtk_widget_set_sensitive(GTK_WIDGET(end_button),FALSE);
 
   gtk_box_pack_end(GTK_BOX(box_button), end_button, TRUE, FALSE, 50);
   gtk_box_pack_end(GTK_BOX(box_button), step_button, TRUE, FALSE, 50);
@@ -160,6 +168,9 @@ int main(int argc, char **argv)
   gtk_container_add(GTK_CONTAINER(window),box_main);
   gtk_box_pack_start(GTK_BOX(box_main),box_button,TRUE,TRUE,50);
   gtk_box_pack_start(GTK_BOX(box_main),box_visu,TRUE,TRUE,50);
+
+  //colors
+  gtk_widget_override_background_color (window,GTK_STATE_FLAG_NORMAL,&bgcolor);
   
   //Aergia
 
@@ -176,7 +187,7 @@ int main(int argc, char **argv)
   //logo = gtk_image_new_from_pixbuf(pixbuf);
   
   //BUTTONS
-  side_buttons(aergia,width,height);
+  side_buttons(aergia,width);
 
   g_signal_connect(aergia.load_button,"clicked", G_CALLBACK(load), &aergia);
   
