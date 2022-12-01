@@ -289,8 +289,8 @@ SDL_Surface *correct_perspective(SDL_Surface *img, SDL_Surface *resultat)
     double distance[4][2] =
         {{0,0},
          {img->w, 0},
-         {img->w,img->w},
-         {0,img->w}};
+         {img->w,img->h},
+         {0,img->h}};
 
     double **result_mat = allocMat(3);
     double **result_mat_inv = allocMat(3);
