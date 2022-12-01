@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
     if(dev_mod)
         screen_surface = display_image(edge_surface);
 
-    bin_surface = load_image("output//treatment/threshold.png");
+    bin_surface = load_image("output/treatment/threshold.png");
 
     // ----------------------Hough_Transform_Rotate----------------------------
     edge_surface = hough_transform_rotate(edge_surface,&bin_surface);
@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
     }
 
     // ----------------------Blob_detection------------------------------------
-    blob result = blobFromImage(edge_surface, 10000);
+    blob result = blobFromImage(edge_surface, 1000);
 
     if(dev_mod)
         screen_surface = display_image(edge_surface);
@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
     slicing(bin_surface);
 
     // ----------------------Free----------------------------------------------
-    SDL_FreeSurface(bin_surface);
+    //SDL_FreeSurface(bin_surface);
     SDL_FreeSurface(edge_surface);
     if(dev_mod)
         SDL_FreeSurface(screen_surface);

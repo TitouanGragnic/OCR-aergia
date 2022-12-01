@@ -16,5 +16,6 @@ typedef struct{
 
 
 blob blobFromImage(SDL_Surface *img, int size);
+SDL_Surface *blobSlot(SDL_Surface *img, int size, SDL_Surface *start);
 
 #endif
