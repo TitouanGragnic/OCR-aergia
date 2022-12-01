@@ -137,7 +137,7 @@ SDL_Surface *blobSlot(SDL_Surface *img, int size, SDL_Surface *start)
 	       id++;
 	       pixel = get_pixel(img, i, j);
 	       SDL_GetRGB(pixel, img->format, &r, &g, &b);
-	       if(r == 0 || matr[i*h+j] > -1)
+	       if(r == 255 || matr[i*h+j] > -1)
 		    continue;
 
 	       coor start = {i,j};
@@ -167,7 +167,7 @@ SDL_Surface *blobSlot(SDL_Surface *img, int size, SDL_Surface *start)
                                  continue;
 			      pixel = get_pixel(img, l, k);
 			      SDL_GetRGB(pixel, img->format, &r, &g, &b);
-			      if(r == 0 || matr[l*h+k] > -1)
+			      if(r == 255 || matr[l*h+k] > -1)
 				   continue;
 
 			      coor next = {l,k};
@@ -204,7 +204,7 @@ SDL_Surface *blobSlot(SDL_Surface *img, int size, SDL_Surface *start)
      {
 	  for(int j = 0;j<h;j++)
 	  {
-	       if(!(i*h+j > maxi.min_x*h+maxi.min_y && i*h+j< maxi.max_x*h+maxi.max_y))
+	       if(matr[i*h+j] != maxi.ID)
 	       {
 		    Uint32 newpixel = SDL_MapRGB(start->format, 255, 255, 255);
 		    put_pixel(start,i,j,newpixel);
