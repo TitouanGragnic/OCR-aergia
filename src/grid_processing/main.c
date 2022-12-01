@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
     }
 
     // ----------------------Blob_detection------------------------------------
-    blob result = blobFromImage(edge_surface, 10000);
+    blob result = blobFromImage(edge_surface, 1000);
 
     if(dev_mod)
         screen_surface = display_image(edge_surface);
