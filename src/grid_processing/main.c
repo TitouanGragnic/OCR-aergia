@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
     slicing(bin_surface);
 
     // ----------------------Free----------------------------------------------
-    SDL_FreeSurface(bin_surface);
+    //SDL_FreeSurface(bin_surface);
     SDL_FreeSurface(edge_surface);
     if(dev_mod)
         SDL_FreeSurface(screen_surface);
