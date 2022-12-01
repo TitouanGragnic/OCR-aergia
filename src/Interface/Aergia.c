@@ -14,6 +14,7 @@ typedef struct Aergia
   GtkWidget *box_visu;
 
   GtkWidget *image;
+  int step;
   
 } Aergia;
 
@@ -57,12 +58,13 @@ void load(GtkButton* button, gpointer data)
       pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(empty));
       pixbuf = gdk_pixbuf_scale_simple(pixbuf, 650, 650, GDK_INTERP_BILINEAR);
       gtk_image_set_from_pixbuf(GTK_IMAGE(aergia->image),pixbuf);
+      
       //treatment here
-      /*
-      char commande[40];
-      sprintf(commande, "C:\Users\Documents\Lanceur.exe");
+      char commande[40]; 
+      sprintf(commande,"%s %s","./executable/main", filename);
       system(commande);
-      */
+      //
+
       gtk_widget_set_sensitive(aergia->step_button,TRUE);
       gtk_widget_set_sensitive(GTK_WIDGET(aergia->end_button),TRUE);
       
@@ -101,6 +103,62 @@ void side_buttons(Aergia aergia,int w)//contains logo too
   
 }
 
+void next_step(GtkButton* button, gpointer data)
+{
+  Aergia *aergia = data;
+
+  GdkPixbuf *pixbuf;
+  GtkWidget *empty;
+  int step = aergia->step;
+
+  
+  char *filenames[] = {"grayscale.png",
+		       "contrast.png",
+		       "brightness.png",
+		       "noise.png",
+		       "blur.png",
+		       "threshold.png",
+		       "sobel.png",
+		       "rotate.png",
+		       "scale.png",
+		       "perspective.png"};
+  char filename[40];
+  if (step<10)
+    {
+      sprintf(filename,"%s%s","output/treatment/", filenames[step]);
+      aergia->step += 1;
+  
+      empty = gtk_image_new_from_file(filename);
+      pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(empty));
+      pixbuf = gdk_pixbuf_scale_simple(pixbuf, 650, 650, GDK_INTERP_BILINEAR);
+      gtk_image_set_from_pixbuf(GTK_IMAGE(aergia->image),pixbuf);
+      if (step == 9)
+	{
+	  gtk_widget_set_sensitive(GTK_WIDGET(aergia->step_button),FALSE);
+      gtk_widget_set_sensitive(GTK_WIDGET(aergia->end_button),FALSE);
+	}	
+    }
+  else
+    {
+      gtk_widget_set_sensitive(GTK_WIDGET(aergia->step_button),FALSE);
+      gtk_widget_set_sensitive(GTK_WIDGET(aergia->end_button),FALSE);
+    }
+}
+
+void magic(GtkButton* button, gpointer data)
+{
+  Aergia *aergia = data;
+
+  GdkPixbuf *pixbuf;
+  GtkWidget *empty;
+  aergia->step = 10;
+  empty = gtk_image_new_from_file("output/treatment/perspective.png");
+  pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(empty));
+  pixbuf = gdk_pixbuf_scale_simple(pixbuf, 650, 650, GDK_INTERP_BILINEAR);
+  gtk_image_set_from_pixbuf(GTK_IMAGE(aergia->image),pixbuf);
+  gtk_widget_set_sensitive(GTK_WIDGET(aergia->step_button),FALSE);
+  gtk_widget_set_sensitive(GTK_WIDGET(aergia->end_button),FALSE);
+}
 
 void resize_image()
 {
@@ -127,6 +185,7 @@ int main(int argc, char **argv)
   GtkWidget *box_button;
   GtkWidget *box_main;
   GtkWidget *box_visu;
+  int step = 0;
   
 
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -157,8 +216,8 @@ int main(int argc, char **argv)
   gtk_widget_set_size_request(GTK_WIDGET(step_button),200,50);
   gtk_widget_set_size_request(GTK_WIDGET(end_button),200,50);
 
-  gtk_widget_set_sensitive(GTK_WIDGET(step_button),FALSE);
-  gtk_widget_set_sensitive(GTK_WIDGET(end_button),FALSE);
+  //gtk_widget_set_sensitive(GTK_WIDGET(step_button),FALSE);
+  //gtk_widget_set_sensitive(GTK_WIDGET(end_button),FALSE);
 
   gtk_box_pack_end(GTK_BOX(box_button), end_button, TRUE, FALSE, 50);
   gtk_box_pack_end(GTK_BOX(box_button), step_button, TRUE, FALSE, 50);
@@ -184,7 +243,8 @@ int main(int argc, char **argv)
 		   box_button,
 		   box_main,
 		   box_visu,
-		   empty};
+		   empty,
+		   step};
 
   //GdkPixbuf *pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(empty)); //if resize needed
   //logo = gtk_image_new_from_pixbuf(pixbuf);
@@ -193,6 +253,8 @@ int main(int argc, char **argv)
   side_buttons(aergia,width);
 
   g_signal_connect(aergia.load_button,"clicked", G_CALLBACK(load), &aergia);
+  g_signal_connect(aergia.end_button,"clicked", G_CALLBACK(magic), &aergia);
+  g_signal_connect(aergia.step_button,"clicked", G_CALLBACK(next_step), &aergia);
   
   g_signal_connect(window,"destroy", G_CALLBACK(gtk_main_quit), NULL); //close window cleanly
   //g_signal_connect(container, "size-allocate", G_CALLBACK(resize_image), NULL);//resize     //##W.I.P
