@@ -14,9 +14,6 @@ all: ${EXEC}
 
 ${EXEC}:${OBJ}
 	${CC} ${CFLAGS} ${LDLIBS} $^ -o $@
-	mkdir output
-	mkdir output/treatment
-	mkdir output/slot
 
 
 clean:
