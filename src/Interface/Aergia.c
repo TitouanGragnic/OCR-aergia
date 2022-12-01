@@ -1,14 +1,29 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
+typedef struct Aergia
+{
+  GtkWidget *window; 
+  
+  GtkWidget *load_button;
+  GtkWidget *step_button;
+  GtkWidget *end_button;
+  
+  GtkWidget *box_buttons;
+  GtkWidget *box_main;
+  GtkWidget *box_visu;
+
+  GtkWidget *image;
+  
+} Aergia;
+
 void load(GtkButton* button, gpointer data)
 {
   /*
     to load the image
    */
   GtkWidget *dialog;
-  GtkWidget *empty;
-  empty = (GtkWidget*)data;
+  Aergia *aergia = data;
 
   GdkPixbuf *pixbuf;
   GtkWidget *image;
@@ -34,8 +49,13 @@ void load(GtkButton* button, gpointer data)
       
       image = gtk_image_new_from_file(filename);
       pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(image));
-      pixbuf = gdk_pixbuf_scale_simple(pixbuf, 600, 600, GDK_INTERP_BILINEAR);
-      gtk_image_set_from_pixbuf(GTK_IMAGE(empty),pixbuf);
+      pixbuf = gdk_pixbuf_scale_simple(pixbuf, 650, 550, GDK_INTERP_BILINEAR);
+      gtk_image_set_from_pixbuf(GTK_IMAGE(aergia.image),pixbuf);
+      //treatment here
+
+
+      gtk_widget_set_sensitive(aergia.step_button,TRUE);
+      
       //free
       g_free (filename);
       
@@ -46,49 +66,32 @@ void load(GtkButton* button, gpointer data)
 
 }
 
-void side_buttons(GtkWidget *box,int w, int h,GtkWidget *empty)//contains logo too
+void side_buttons(Aergia aergia,int w, int h)//contains logo too
 {
   /*
   creates the buttons
    */
-  GtkWidget *button1;
-  GtkWidget *button2;
   
   GtkWidget *logo = gtk_image_new_from_file("logo.png");
   GdkPixbuf *pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(logo));
   
-  //buttons part
+  //old buttons part pos
   
-  button1 = gtk_button_new_with_label("Load image");
-  button2 = gtk_button_new_with_label("Operate Magic");
-
-  gtk_widget_set_size_request(GTK_WIDGET(button1),200,50);
-  gtk_widget_set_size_request(GTK_WIDGET(button2),200,50);
-
-  gtk_box_pack_end(GTK_BOX(box), button2, TRUE, FALSE, 50);
-  gtk_box_pack_end(GTK_BOX(box), button1, TRUE, FALSE, 50);
+  
 
   //loader
-  g_signal_connect(button1,"clicked", G_CALLBACK(load), (gpointer)empty);
+  
 
   //logo part
 
   pixbuf = gdk_pixbuf_scale_simple(pixbuf, w/75*24,w/75*7 , GDK_INTERP_BILINEAR);
   logo = gtk_image_new_from_pixbuf(pixbuf);
-  gtk_box_pack_end(GTK_BOX(box), logo, TRUE, TRUE, 50);
+  gtk_box_pack_end(GTK_BOX(aergia.box_buttons), logo, TRUE, TRUE, 50);
+
+  g_signal_connect(aergia.load_button,"clicked", G_CALLBACK(load), &aergia);
+  
 }
 
-
-void visualizer(GtkWidget *box)
-{
-  /*
-    creates the slider
-   */
-  GtkWidget *angleslider;
-  angleslider = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL,0,360,1); 
-  gtk_widget_set_size_request(GTK_WIDGET(angleslider),600,50);
-  gtk_box_pack_end(GTK_BOX(box),angleslider,TRUE,TRUE,50);
-}
 
 void resize_image()
 {
@@ -101,17 +104,19 @@ void resize_image()
 
 int main(int argc, char **argv)
 {
-  const char *title;
   int width = 1000;
   int height = 800;
   
   gtk_init(&argc, &argv);
-
-  GtkWidget *window; //declare window
-
-  GtkWidget *box_buttons;
+  
+  GtkWidget *window;
+  GtkWidget *load_button;
+  GtkWidget *step_button;
+  GtkWidget *end_button;
+  GtkWidget *box_button;
   GtkWidget *box_main;
   GtkWidget *box_visu;
+  
 
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   
@@ -124,35 +129,62 @@ int main(int argc, char **argv)
   //gtk_window_get_size(GTK_WINDOW(window), &width, &height);
 
   //SET BOXES
-  box_buttons = gtk_box_new(GTK_ORIENTATION_VERTICAL, 50);
+  box_button = gtk_box_new(GTK_ORIENTATION_VERTICAL, 50);
   box_main = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 50);
   box_visu = gtk_box_new(GTK_ORIENTATION_VERTICAL,100);
 
   //VISUALIZER
 
   GtkWidget *empty = gtk_image_new_from_file("empty.png");
-  //GdkPixbuf *pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(empty)); //if resize needed
-  //logo = gtk_image_new_from_pixbuf(pixbuf);
-  gtk_widget_set_size_request(GTK_WIDGET(empty),650,550);
-  gtk_box_pack_start(GTK_BOX(box_visu), empty, TRUE, TRUE, 50);
-  
-  visualizer(box_visu);
-  
-  
-  //BUTTONS
-  side_buttons(box_buttons,width,height,empty);
- 
-  //main box
-  gtk_container_add(GTK_CONTAINER(window),box_main);
-  gtk_box_pack_start(GTK_BOX(box_main),box_buttons,TRUE,TRUE,50);
-  gtk_box_pack_start(GTK_BOX(box_main),box_visu,TRUE,TRUE,50);
 
   //gtk_box_set_homogeneous(GTK_BOX(box_buttons), TRUE);
 
+  //buttons
+  load_button = gtk_button_new_with_label("Load image");
+  step_button = gtk_button_new_with_label("Next Step");
+  end_button = gtk_button_new_with_label("Operate Magic");
+
+  gtk_widget_set_size_request(GTK_WIDGET(load_button),200,50);
+  gtk_widget_set_size_request(GTK_WIDGET(step_button),200,50);
+  gtk_widget_set_size_request(GTK_WIDGET(end_button),200,50);
+
+  gtk_widget_set_sensitive(GTK_WIDGET(step_button),FALSE);
+
+  gtk_box_pack_end(GTK_BOX(box_button), end_button, TRUE, FALSE, 50);
+  gtk_box_pack_end(GTK_BOX(box_button), step_button, TRUE, FALSE, 50);
+  gtk_box_pack_end(GTK_BOX(box_button), load_button, TRUE, FALSE, 50);
+
+  //Aergia
+
+  Aergia aergia = {window,
+		   load_button,
+		   step_button,
+		   end_button,
+		   box_button,
+		   box_main,
+		   box_visu,
+		   empty};
+
+  //GdkPixbuf *pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(empty)); //if resize needed
+  //logo = gtk_image_new_from_pixbuf(pixbuf);
+  gtk_widget_set_size_request(GTK_WIDGET(aergia.image),650,550);
+  gtk_box_pack_start(GTK_BOX(aergia.box_visu), aergia.image, TRUE, TRUE, 50);
+
+
+ 
+  //main box
+  gtk_container_add(GTK_CONTAINER(aergia.window),aergia.box_main);
+  gtk_box_pack_start(GTK_BOX(aergia.box_main),aergia.box_buttons,TRUE,TRUE,50);
+  gtk_box_pack_start(GTK_BOX(aergia.box_main),aergia.box_visu,TRUE,TRUE,50);
+  
+  //BUTTONS
+  side_buttons(aergia,width,height);
+  
   g_signal_connect(window,"destroy", G_CALLBACK(gtk_main_quit), NULL); //close window cleanly
   //g_signal_connect(container, "size-allocate", G_CALLBACK(resize_image), NULL);//resize     //##W.I.P
   
-  gtk_widget_show_all(window); //show the window
+  
+  gtk_widget_show_all(aergia.window); //show the window
 
   gtk_main();
 
