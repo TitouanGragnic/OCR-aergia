@@ -77,6 +77,6 @@ void slicing(SDL_Surface* main_surface)
             number++;
 	}
     }
-    SDL_FreeSurface(result_surface);
+    SDL_FreeSurface(slot_surface);
     SDL_FreeSurface(main_surface);
 }
