@@ -313,7 +313,7 @@ SDL_Surface *correct_perspective(SDL_Surface *img, SDL_Surface *resultat)
      //Perspective matrix
      perspective_mat(base_coor, distance, result_mat, result_mat_inv);
 
-     SDL_Surface *result = SDL_CreateRGBSurface(0,img->w,img->h,32,0,0,0,0);
+     SDL_Surface *result = SDL_CreateRGBSurface(0,img->w,img->w,32,0,0,0,0);
 
      for(int i = 0;i<result->w; i++)
      {
