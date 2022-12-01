@@ -39,8 +39,7 @@ void slicing(SDL_Surface* main_surface)
 		}
 	    }
             edge_surface = Sobel(slot_surface, 0);
-            blob result = blobFromImage(edge_surface, 10);
-            result_surface = scale(slot_surface, result.min_x, result.min_y, result.max_x, result.max_y);
+            result_surface = blobSlot(edge_surface, 0, slot_surface);
             result_surface = resize_slot(result_surface);
             file_name[16] = '0'+number/10;
             file_name[17] = '0'+number%10;
@@ -50,6 +49,5 @@ void slicing(SDL_Surface* main_surface)
 	}
     }
     SDL_FreeSurface(result_surface);
-    SDL_FreeSurface(edge_surface);
     SDL_FreeSurface(main_surface);
 }
