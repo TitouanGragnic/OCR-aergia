@@ -1,7 +1,7 @@
 #include "../../include/utils/stack.h"
 /*
  * I use 1 queue for the head and his pred is the top of the queue
-*/
+ */
 
 stack* get_empty_stack()
 {

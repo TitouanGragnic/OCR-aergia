@@ -21,5 +21,9 @@ clean:
 	${RM} ${EXEC}
 	${RM} output/slot/*.png
 	${RM} output/treatment/*.png
+output:
+	mkdir output
+	mkdir output/treatment
+	mkdir output/slot
 
 # END

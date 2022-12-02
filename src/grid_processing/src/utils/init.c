@@ -28,11 +28,11 @@ SDL_Surface* display_image(SDL_Surface* img)
     // Set the window to the same size as the image
     screen = SDL_SetVideoMode(img->w, img->h, 0, SDL_SWSURFACE | SDL_ANYFORMAT);
     if (screen == NULL)
-	{
-	    // error management
-	    errx(1, "Couldn't set %dx%d video mode: %s\n",
-		 img->w, img->h, SDL_GetError());
-	}
+    {
+        // error management
+        errx(1, "Couldn't set %dx%d video mode: %s\n",
+             img->w, img->h, SDL_GetError());
+    }
 
     // Blit onto the screen surface
     if (SDL_BlitSurface(img, NULL, screen, NULL) < 0)
@@ -51,14 +51,14 @@ void wait_for_keypressed()
 
     // Wait for a key to be down.
     do
-	{
-	    SDL_PollEvent(&event);
-	} while (event.type != SDL_KEYDOWN);
+    {
+        SDL_PollEvent(&event);
+    } while (event.type != SDL_KEYDOWN);
 
     // Wait for a key to be up.
     do
-	{
-	    SDL_PollEvent(&event);
-	} while (event.type != SDL_KEYUP);
+    {
+        SDL_PollEvent(&event);
+    } while (event.type != SDL_KEYUP);
 }
 void SDL_FreeSurface(SDL_Surface *surface);
