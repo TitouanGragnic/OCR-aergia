@@ -58,7 +58,7 @@ void drawLine(SDL_Surface *Screen, int x0, int y0, int x1, int y1)
 
      for ( i = 0; i < length; i += 1) {
 	  if(x>=0 && y>=0 && y<Screen->h && x<Screen->w)
-	       put_pixel(Screen, x, y, pixel );
+	       put_pixel(Screen, x, y, pixel);
 	  x += addx;
 	  y += addy;
      }
