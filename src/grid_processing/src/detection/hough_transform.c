@@ -159,14 +159,18 @@ int draw_lines_polaire(SDL_Surface* img, int* matr,int len,int var,int max)
     return nb;
 }
 
-void draw_simple_line(SDL_Surface* img,  line* tab,int len)
+void draw_simple_line(SDL_Surface* img, list_l* tab)
 {
     /*
       draw each line of tab
     */
-    for(int i =0;i<len;i++)
-        drawLine(img,tab[i].x1,tab[i].y1,tab[i].x2,tab[i].y2);
-
+    list_l* tmp = tab;
+    while (tmp != NULL)
+    {
+        line l = tmp->value;
+        drawLine(img,l.x1,l.y1,l.x2,l.y2);
+        tmp = tmp->next;
+    }
 }
 double __get_angle(int x1, int y1, int x2 , int y2)
 {
@@ -208,6 +212,8 @@ SDL_Surface* hough_transform_rotate(SDL_Surface* edge_surface, SDL_Surface** bin
     int lenght = sqrt(w*w+h*h);
 
     int *matr = malloc(lenght * 360 * sizeof(int));
+    SDL_Surface * step = copy_surface(edge_surface);
+
 
     for (int i = 0 ; i < lenght * 360; i++)
         matr[i] = 0;
@@ -218,6 +224,10 @@ SDL_Surface* hough_transform_rotate(SDL_Surface* edge_surface, SDL_Surface** bin
     //int nb = draw_lines_polaire(edge_surface, matr, lenght,0,max);
     list_l* lines = find_line(matr, lenght, w, h, max);
     lines = simplify_line(lines);
+
+    draw_simple_line(step, lines);
+    SDL_SaveBMP(step, "output/treatment/lines.png");
+
     int alpha = get_angle(lines);
     int angle = alpha%90;
     if ((angle >= 70 && angle <= 110) || (angle >= -20 && angle <= 20))
@@ -227,5 +237,6 @@ SDL_Surface* hough_transform_rotate(SDL_Surface* edge_surface, SDL_Surface** bin
     *bin_surface = rotate(*bin_surface, alpha, 1);
     free(matr);
     free_linked_list_l(lines);
+    SDL_FreeSurface(step);
     return edge_surface;
 }

@@ -102,6 +102,7 @@ int main(int argc, char *argv[])
 
     // ----------------------Hough_Transform_Rotate----------------------------
     edge_surface = hough_transform_rotate(edge_surface,&bin_surface);
+    // hough_transform_rotate save lines.png image with lines
     SDL_SaveBMP(edge_surface, "output/treatment/rotate.png");
 
     if(dev_mod)

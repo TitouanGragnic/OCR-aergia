@@ -92,3 +92,13 @@ void put_pixel_value( SDL_Surface* img, int x, int y, int value)
     Uint32 pixel = SDL_MapRGB( img->format, value, value, value);
     put_pixel( img, x, y, pixel);
 }
+
+SDL_Surface* copy_surface(SDL_Surface* img)
+{
+    SDL_Surface* out =  SDL_CreateRGBSurface(0, img->w, img->h, 32, 0, 0, 0, 0);
+
+    for (int i = 0; i < img->w; i++)
+        for (int j = 0; j <img->h; j++)
+            put_pixel_value(out, i, j, pixel_value(img, i, j));
+    return out;
+}
