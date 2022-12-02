@@ -6,7 +6,7 @@ void slicing(SDL_Surface* main_surface)
       slices the grid into 81 slots and saves them in output
     */
     SDL_Surface* slot_surface;
-    SDL_Surface* edge_surface;
+    SDL_Surface* copy;
     SDL_Surface* result_surface;
 
     int number = 0;
@@ -27,6 +27,7 @@ void slicing(SDL_Surface* main_surface)
         for (int j = 0;j<9;j++)
 	{
             slot_surface = SDL_CreateRGBSurface(0, newW, newH,32,0,0,0,0);
+	    copy = SDL_CreateRGBSurface(0, newW, newH,32,0,0,0,0);
             for(int x = 0;x<newW;x++)
 	    {
                 for(int y = 0;y<newH;y++)
@@ -36,18 +37,45 @@ void slicing(SDL_Surface* main_surface)
                     //put on the right color
                     newPixel = SDL_MapRGB(main_surface->format, r, g, b);
                     put_pixel(slot_surface,x,y,newPixel);
+		    put_pixel(copy,x,y,newPixel);
 		}
 	    }
-            edge_surface = Sobel(slot_surface, 0);
-            result_surface = blobSlot(edge_surface, 0, slot_surface);
-            result_surface = resize_slot(result_surface);
+	    result_surface = resize_slot(copy);
+	    slot_surface = resize_slot(slot_surface);
+	    for (int x = 0;x<16;x++)
+	    {
+		 for (int y = 0; y<3; y++)
+		 {
+		      newPixel = SDL_MapRGB(main_surface->format, 255, 255, 255);
+		      put_pixel(result_surface,x,y,newPixel);
+		 }
+		 for (int y = 13;y<16;y++)
+		 {
+		      newPixel = SDL_MapRGB(main_surface->format, 255, 255, 255);
+		      put_pixel(result_surface,x,y,newPixel);
+		 }
+	    }
+	    for (int y = 2;y<14;y++)
+	    {
+		 for (int x = 0;x<3; x++)
+		 {
+		      newPixel = SDL_MapRGB(main_surface->format, 255, 255, 255);
+		      put_pixel(result_surface,x,y,newPixel);
+		 }
+		 for (int x = 13;x<16;x++)
+		 {
+		      newPixel = SDL_MapRGB(main_surface->format, 255, 255, 255);
+		      put_pixel(result_surface,x,y,newPixel);
+		 }
+	    }
+            slot_surface = blobSlot(result_surface, 0, slot_surface);
+            
             file_name[16] = '0'+number/10;
             file_name[17] = '0'+number%10;
-            SDL_SaveBMP(result_surface, file_name);
-            printf("%d \n", number);
+            SDL_SaveBMP(slot_surface, file_name);
             number++;
+	    SDL_FreeSurface(slot_surface);
 	}
     }
-    SDL_FreeSurface(result_surface);
     SDL_FreeSurface(main_surface);
 }
