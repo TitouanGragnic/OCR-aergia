@@ -1,6 +1,7 @@
 #include <err.h>
 #include <stdlib.h>
 #include <math.h>
+#include <pthread.h>
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include "include/utils/init.h"
@@ -27,11 +28,30 @@ struct carth{
     int y;
 };
 
+struct img_file{
+    SDL_Surface* img;
+    char* file;
+};
+
+static void* saveThead(void* input_i)
+{
+    struct img_file* input = input_i;
+    SDL_SaveBMP(input->img, input->file);
+    SDL_FreeSurface(input->img);
+    pthread_exit(NULL);
+}
+
+
+
 int main(int argc, char *argv[])
 {
     // ----------------------Assert---------------------------------------------
     if(argc > 3 || argc == 1)
         errx(1, "Type wanted is : ./out file.png dev_mod\n");
+
+    size_t NUM_THREADS = 12*2;
+    size_t th = 0;
+    pthread_t threads[NUM_THREADS];
 
     SDL_Surface* edge_surface;
     SDL_Surface* bin_surface;
@@ -50,35 +70,50 @@ int main(int argc, char *argv[])
 
     // ----------------------Grayscale-----------------------------------------
     grayscale(edge_surface);
-    SDL_SaveBMP(edge_surface, "output/treatment/grayscale.png");
-
+    struct img_file out;
+    out.img = copy_surface(edge_surface);
+    out.file = "output/treatment/grayscale.png";
+    pthread_create(&threads[th], NULL, saveThead, &out);
+    th++;
     if(dev_mod)
         screen_surface = display_image(edge_surface);
 
     // ----------------------Increase_Contrast---------------------------------
     max = increase_contrast(edge_surface,10);
-    SDL_SaveBMP(edge_surface, "output/treatment/contrast.png");
+    out.img = copy_surface(edge_surface);
+    out.file = "output/treatment/contrast.png";
+    pthread_create(&threads[th], NULL, saveThead, &out);
+    th++;
 
     if(dev_mod)
         screen_surface = display_image(edge_surface);
 
     // ----------------------Brightness----------------------------------------
     brightness(edge_surface,max);
-    SDL_SaveBMP(edge_surface, "output/treatment/brightness.png");
+    out.img = copy_surface(edge_surface);
+    out.file = "output/treatment/brightness.png";
+    pthread_create(&threads[th], NULL, saveThead, &out);
+    th++;
 
     if(dev_mod)
         screen_surface = display_image(edge_surface);
 
     // ----------------------Reduce_Noise--------------------------------------
     edge_surface = reduce_noise(edge_surface);
-    SDL_SaveBMP(edge_surface, "output/treatment/noise.png");
+    out.img = copy_surface(edge_surface);
+    out.file = "output/treatment/noise.png";
+    pthread_create(&threads[th], NULL, saveThead, &out);
+    th++;
 
     if(dev_mod)
         screen_surface = display_image(edge_surface);
 
     // ----------------------Blur----------------------------------------------
     edge_surface = blur(edge_surface);
-    SDL_SaveBMP(edge_surface, "output/treatment/blur.png");
+    out.img = copy_surface(edge_surface);
+    out.file = "output/treatment/blur.png";
+    pthread_create(&threads[th], NULL, saveThead, &out);
+    th++;
 
     if(dev_mod)
         screen_surface = display_image(edge_surface);
@@ -86,24 +121,33 @@ int main(int argc, char *argv[])
     // ----------------------Adaptive_Threshold--------------------------------
     int noise_level = noise(edge_surface, edge_surface->w,edge_surface->h);
     adaptive_threshold(edge_surface, noise_level > 300 ? 0.5 : 0.15,32);
-    SDL_SaveBMP(edge_surface, "output/treatment/threshold.png");
+    out.img = copy_surface(edge_surface);
+    out.file = "output/treatment/threshold.png";
+    pthread_create(&threads[th], NULL, saveThead, &out);
+    th++;
 
     if(dev_mod)
         screen_surface = display_image(edge_surface);
 
     // ----------------------Sobel---------------------------------------------
     edge_surface = Sobel(edge_surface, 1);
-    SDL_SaveBMP(edge_surface, "output/treatment/sobel.png");
+    out.img = copy_surface(edge_surface);
+    out.file = "output/treatment/sobel.png";
+    pthread_create(&threads[th], NULL, saveThead, &out);
+    th++;
 
     if(dev_mod)
         screen_surface = display_image(edge_surface);
-
-    bin_surface = load_image("output/treatment/threshold.png");
+    bin_surface = load_image("output//treatment/threshold.png");
 
     // ----------------------Hough_Transform_Rotate----------------------------
     edge_surface = hough_transform_rotate(edge_surface,&bin_surface);
     // hough_transform_rotate save lines.png image with lines
-    SDL_SaveBMP(edge_surface, "output/treatment/rotate.png");
+
+    out.img = copy_surface(edge_surface);
+    out.file = "output/treatment/rotate.png";
+    pthread_create(&threads[th], NULL, saveThead, &out);
+    th++;
 
     if(dev_mod)
     {
@@ -120,7 +164,11 @@ int main(int argc, char *argv[])
     // ----------------------Scale---------------------------------------------
     edge_surface = scale(edge_surface, result.min_x, result.min_y, result.max_x,result.max_y);
     bin_surface = scale(bin_surface, result.min_x, result.min_y, result.max_x,result.max_y);
-    SDL_SaveBMP(bin_surface, "output/treatment/scale.png");
+
+    out.img = copy_surface(bin_surface);
+    out.file = "output/treatment/scale.png";
+    pthread_create(&threads[th], NULL, saveThead, &out);
+    th++;
 
     if(dev_mod)
         screen_surface = display_image(edge_surface);
@@ -130,7 +178,11 @@ int main(int argc, char *argv[])
 
     // ----------------------Correct_Perspective-------------------------------
     bin_surface = correct_perspective(edge_surface, bin_surface);
-    SDL_SaveBMP(bin_surface, "output/treatment/perspective.png");
+
+    out.img = copy_surface(bin_surface);
+    out.file = "output/treatment/perspective.png";
+    pthread_create(&threads[th], NULL, saveThead, &out);
+    th++;
     if(dev_mod)
     {
         screen_surface = display_image(bin_surface);
@@ -145,5 +197,9 @@ int main(int argc, char *argv[])
     SDL_FreeSurface(edge_surface);
     if(dev_mod)
         SDL_FreeSurface(screen_surface);
+
+    for(size_t i =0; i<th; i++)
+        pthread_join(threads[i], NULL);
+
     return 0;
 }
