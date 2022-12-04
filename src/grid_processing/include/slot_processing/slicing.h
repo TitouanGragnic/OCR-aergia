@@ -13,6 +13,6 @@
 #include "../utils/scale.h"
 #include "../color_treatment/edge_detection.h"
 
-void slicing(SDL_Surface* surface);
+void slicing(SDL_Surface* surface, int hexa);
 
 #endif

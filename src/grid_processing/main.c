@@ -58,9 +58,12 @@ int main(int argc, char *argv[])
 
     if(edge_surface->w > 1024 ||edge_surface->h > 1024)
         edge_surface = resize(edge_surface);
+    make_thread(&out, edge_surface, "output/treatment/original.png");
 
     // ----------------------Grayscale-----------------------------------------
     grayscale(edge_surface);
+
+    make_thread(&out, edge_surface, "output/treatment/grayscale.png");
 
     if(dev_mod)
         screen_surface = display_image(edge_surface);
@@ -110,7 +113,7 @@ int main(int argc, char *argv[])
     bin_surface = load_image("output/treatment/threshold.png");
 
     // ----------------------Hough_Transform_Rotate----------------------------
-    edge_surface = hough_transform_rotate(edge_surface,&bin_surface);
+    edge_surface = hough_transform_rotate(edge_surface,&bin_surface,&out);
     // hough_transform_rotate save lines.png image with lines
     make_thread(&out, edge_surface, "output/treatment/rotate.png");
 
@@ -148,7 +151,7 @@ int main(int argc, char *argv[])
         wait_for_keypressed();
     }
 
-    slicing(bin_surface);
+    slicing(bin_surface,0);
 
     // ----------------------Free----------------------------------------------
     //SDL_FreeSurface(bin_surface);

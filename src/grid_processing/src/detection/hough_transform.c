@@ -201,7 +201,7 @@ int get_angle(list_l* tab)
     return max;
 }
 
-SDL_Surface* hough_transform_rotate(SDL_Surface* edge_surface, SDL_Surface** bin_surface)
+SDL_Surface* hough_transform_rotate(SDL_Surface* edge_surface, SDL_Surface** bin_surface, img_thread* data)
 {
     /*
       rotate edge_surface and bin_surface regarding anlge of most paralele lines find
@@ -226,7 +226,7 @@ SDL_Surface* hough_transform_rotate(SDL_Surface* edge_surface, SDL_Surface** bin
     lines = simplify_line(lines);
 
     draw_simple_line(step, lines);
-    SDL_SaveBMP(step, "output/treatment/lines.png");
+    make_thread(data, step, "output/treatment/lines.png");
 
     int alpha = get_angle(lines);
     int angle = alpha%90;
