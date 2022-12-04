@@ -99,6 +99,6 @@ SDL_Surface* copy_surface(SDL_Surface* img)
 
     for (int i = 0; i < img->w; i++)
         for (int j = 0; j <img->h; j++)
-            put_pixel_value(out, i, j, pixel_value(img, i, j));
+            put_pixel(out, i, j, get_pixel(img, i, j));
     return out;
 }
