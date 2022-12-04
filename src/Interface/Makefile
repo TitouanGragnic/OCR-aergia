@@ -1,7 +1,7 @@
 PROG = Aergia
 
 CC = gcc
-CFLAGS = `pkg-config --cflags gtk+-3.0` -Wextra -Wall -g
+CFLAGS = `pkg-config --cflags gtk+-3.0` -Werror -Wextra -Wall -O3 -fsanitize=address -g
 LIBS = `pkg-config --libs gtk+-3.0`
 
 aergia: Aergia.c
@@ -9,3 +9,4 @@ aergia: Aergia.c
 
 clean:
 	rm ${PROG}
+	rm output/slot/*.png
