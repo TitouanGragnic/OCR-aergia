@@ -17,6 +17,7 @@
 #include "include/color_treatment/brightness.h"
 #include "include/color_treatment/adaptive_threshold.h"
 #include "include/color_treatment/edge_detection.h"
+#include "include/color_treatment/inverse.h"
 
 #include "include/detection/grid_detection.h"
 #include "include/detection/hough_transform.h"
@@ -48,7 +49,7 @@ int main(int argc, char *argv[])
     SDL_Surface* bin_surface;
     SDL_Surface* screen_surface;
     int max;
-    int dev_mod = argc !=3;
+    int dev_mod = argc != 3;
 
     // : Initialize the SDL
     init_sdl();
@@ -59,6 +60,9 @@ int main(int argc, char *argv[])
     if(edge_surface->w > 1024 ||edge_surface->h > 1024)
         edge_surface = resize(edge_surface);
     make_thread(&out, edge_surface, "output/treatment/original.png");
+
+    // ----------------------Inverse-----------------------------------------
+    edge_surface = inverse_color(edge_surface);
 
     // ----------------------Grayscale-----------------------------------------
     grayscale(edge_surface);
@@ -105,7 +109,7 @@ int main(int argc, char *argv[])
         screen_surface = display_image(edge_surface);
 
     // ----------------------Sobel---------------------------------------------
-    edge_surface = Sobel(edge_surface, 1);
+    edge_surface = Sobel(edge_surface);
     make_thread(&out, edge_surface, "output/treatment/sobel.png");
 
     if(dev_mod)

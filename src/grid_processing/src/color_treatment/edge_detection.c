@@ -36,7 +36,7 @@ double convolution(SDL_Surface *img , double matr[3*3], int x, int y)
     return sum;
 }
 
-SDL_Surface *Sobel(SDL_Surface *img, int var)
+SDL_Surface *Sobel(SDL_Surface *img)
 {
     /*
       apply Sobel filter and inverse result
@@ -73,7 +73,6 @@ SDL_Surface *Sobel(SDL_Surface *img, int var)
             put_pixel_value(result, i, j, color);
         }
     }
-    if (var)
-        SDL_FreeSurface(img);
+    SDL_FreeSurface(img);
     return result;
 }

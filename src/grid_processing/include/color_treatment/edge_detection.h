@@ -7,6 +7,6 @@
 
 int get_new_value(SDL_Surface *img,int i, int j);
 double convolution(SDL_Surface *img , double matr[3*3], int x, int y);
-SDL_Surface *Sobel(SDL_Surface *img, int var);
+SDL_Surface *Sobel(SDL_Surface *img);
 
 #endif
