@@ -1,0 +1,9 @@
+window label {
+  color: #888899;
+}
+window {
+  background-color: #2f2e35;
+}
+box * {
+  font: 20px Sans;
+}
