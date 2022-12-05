@@ -3,6 +3,7 @@
 
 #include "pixel_for_neural.h"
 #include "../utils/init.h"
+#include "../utils/pixel_operations.h"
 #include <stdio.h>
 #include <dirent.h>
 

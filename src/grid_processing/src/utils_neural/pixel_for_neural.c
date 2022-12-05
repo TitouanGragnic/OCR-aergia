@@ -6,7 +6,7 @@ Uint8* pixel_ref(SDL_Surface* surf, unsigned x, unsigned y)
     int bpp = surf->format->BytesPerPixel;
     return (Uint8*)surf->pixels + x * surf->pitch + y * bpp;
 }
-
+/*
 Uint32 get_pixel(SDL_Surface* surface, unsigned x, unsigned y)
 {
     Uint8* p = pixel_ref(surface, x, y);
@@ -74,15 +74,18 @@ void update_surface(SDL_Surface* screen, SDL_Surface* image)
 
     SDL_UpdateRect(screen, 0, 0, image->w, image->h);
 }
+*/
+/*
 
 Uint8 pixelValue(int x, int y, SDL_Surface* img)
 {
-     /*
-       return red value on pixel
-     */
+     
+     //return red value on pixel
+     
     Uint32 pixel;
     pixel = get_pixel(img, x, y);
     Uint8 r, g, b;
     SDL_GetRGB(pixel, img->format, &r, &g, &b);
     return r;
 }
+*/

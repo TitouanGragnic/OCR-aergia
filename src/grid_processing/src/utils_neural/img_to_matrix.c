@@ -6,7 +6,7 @@ void img_to_matrix(SDL_Surface* img, double* res)
     {
         for(int j = 0; j < img->w; j++)
         {
-            if (pixelValue( i, j, img) > 140) // == 255
+            if (pixel_value(img, i, j) > 140) // == 255
                 res[i*img->w + j] = 0;
             else
                 res[i*img->w + j] = 1;
