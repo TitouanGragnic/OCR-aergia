@@ -49,22 +49,12 @@ int main(int argc, char *argv[])
     SDL_Surface* bin_surface;
     SDL_Surface* screen_surface;
     int max;
-    int dev_mod = argc != 3;
-    int width = 9;
+    int dev_mod = argc != 3 ||argv[2][0] == '1';
+    int hexa = argc==3 && (argv[2][0] == '1' ||argv[2][0] == '0' );
     // arg 3 == nothing -> devmod + !hexa
     // arg 3 == 1 -> devmod + hexa
     // arg 3 == 0 -> !devmod + hexa
     // arg 3 == other -> !devmod + !hexa
-    if(argc == 3)
-    {
-        if(argv[2][0] == '1')
-        {
-            width = 16;
-            dev_mod = 0;
-        }
-        if(argv[2][0] == '0')
-            width = 16;
-    }
 
     // : Initialize the SDL
     init_sdl();
@@ -170,7 +160,7 @@ int main(int argc, char *argv[])
         wait_for_keypressed();
     }
 
-    slicing(bin_surface,0);
+    slicing(bin_surface,hexa);
 
     // ----------------------Free----------------------------------------------
     //SDL_FreeSurface(bin_surface);
