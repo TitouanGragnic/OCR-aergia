@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <err.h>
 #include <string.h>
-#include "neural_network.h"
+#include "neural_network/neural_network.h"
 
 int main(int argc, char* argv[])
 {
@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 
     size_t Layers[] = { 2, 2, 1 };
 
-    struct Training training = { NULL, NULL, 4, 2, 1 };
+    Training training = { NULL, NULL, 4, 2, 1 };
 
     double inputs[] = { 0, 0, 0, 1, 1, 0, 1, 1};
 
@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
     training.inputs = inputs;
     training.outputs = outputs;
 
-    struct Network network = initialize_network(nb_layer, Layers);
+    Network network = initialize_network(nb_layer, Layers);
 
     /*
     training of the network.
@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 
     save_network(network, "logs/xor.txt");
     printf("Network successfully saved.\n");
-    struct Network network2 = load_network("logs/xor.txt");
+    Network network2 = load_network("logs/xor.txt");
     printf("Network successfully loaded.\n");
 
     /*

@@ -44,14 +44,11 @@ void free_training(Training training)
     training.nb_out = 0;
 }
 
-void make_out(double *out, size_t n, char c) // a modifier
+void initialize_outputs(double* outputs, size_t n, int acc)
 {
     for(size_t i = 0; i < n; i++)
-        out[i] = 0;
-    if('0' <= c && c <= '9')
-        out[c-'0'] = 1;
-    else
-        out[36+c-'A'] = 1;
+        outputs[i] = 0;
+    outputs[acc] = 1;
 }
 
 int extract_res(double* outputs, int n)
@@ -61,10 +58,11 @@ int extract_res(double* outputs, int n)
 		i++;
 	if(i < 10)
 		return i;
-	return -1;
+	printf("pepin\n");
+	return 0;
 }
 
-Training load_training(char* path) // to modify, use generate_dataset() ?
+Training load_training(char* path)
 {
     size_t nb_tries = 20;
     size_t nb_characters = 10;
@@ -78,17 +76,18 @@ Training load_training(char* path) // to modify, use generate_dataset() ?
 
     SDL_Surface* img;
     char file[4096];
-    for(size_t try = 1; try <= nb_tries; try++)
+    for(size_t try = 0; try <= nb_tries; try++)
     {
-        for(size_t i = 1; i < 10; i++)
+        for(size_t i = 0; i < 10; i++)
         {
-            sprintf(file, "%s%c/%lu.png", path, (char)i+'0', try);
+            sprintf(file, "%s%ld/%lu.png", path, i, try);
             img = load_image(file);
             printf("Load -> %s w:%i h:%i\n", file, img->w, img->h);
             size_t use = i + (try - 1) * nb_outputs;
             img_to_matrix(img, training_in(&training, use));
-			make_out(training_out(&training, use), nb_outputs, (char)i+'0');
+			initialize_outputs(training_out(&training, use), nb_outputs, i);
         }
     }
+	SDL_FreeSurface(img);
     return training;
 }
