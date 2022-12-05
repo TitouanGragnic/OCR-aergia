@@ -1,5 +1,5 @@
-#ifndef PIXEL_OPERATIONS_H_
-#define PIXEL_OPERATIONS_H_
+#ifndef PIXEL_FOR_NEURAL_H_
+#define PIXEL_FOR_NEURAL_H_
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>

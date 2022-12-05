@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <SDL/SDL.h>
-#include "../utils/img_to_matrix.h"
-#include "../utils/pixel_operations.h"
+#include "../utils_neural/img_to_matrix.h"
+#include "../utils_neural/pixel_for_neural.h"
 
 typedef struct
 {

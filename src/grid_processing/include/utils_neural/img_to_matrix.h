@@ -1,8 +1,8 @@
 #ifndef IMG_TO_MATRIX_H_
 #define IMG_TO_MATRIX_H_
 
-#include "pixel_operations.h"
-#include "../../grid_processing/include/utils/init.h"
+#include "pixel_for_neural.h"
+#include "../utils/init.h"
 #include <stdio.h>
 #include <dirent.h>
 

@@ -1,4 +1,4 @@
-#include "img_to_matrix.h"
+#include "../../include/utils_neural/img_to_matrix.h"
 
 void img_to_matrix(SDL_Surface* img, double* res)
 {
@@ -54,7 +54,7 @@ void create_dataset(char* path) // rewrite using snprintf
 			continue;
 
         char subpath[2 * (strlen(path) + strlen(pDirent->d_name) + 2)];
-        
+
 		strcpy(subpath, path);
 		strcat(strcat(subpath, "/"), pDirent->d_name);
         strcat(subpath, "/");
@@ -64,18 +64,18 @@ void create_dataset(char* path) // rewrite using snprintf
 
 		char filename[strlen(pDirent->d_name) + 5];
 		strcat(strcpy(filename, pDirent->d_name), ".txt");
-		
+
 		char filepath[strlen(subpath) + strlen(filename) + 2];
 		strcpy(filepath, subpath);
 		strcat(filepath, filename);
-		
+
 		FILE* fptr;
 		remove(filepath);
 		fptr = fopen(filepath, "w");
 
 		if(fptr == NULL)
 			errx(1, "An error occurred while opening the file.\n");
-		
+
         while((pSubDirent = readdir(pSubDir)) != NULL)
 		{
 			if(!strcmp(pSubDirent->d_name, "..") ||

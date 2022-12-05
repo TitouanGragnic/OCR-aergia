@@ -1,4 +1,4 @@
-#include "training.h"
+#include "../../include/training/training.h"
 
 double* training_in(Training* training, size_t i)
 {

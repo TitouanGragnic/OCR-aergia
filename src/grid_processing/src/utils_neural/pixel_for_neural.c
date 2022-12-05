@@ -1,4 +1,4 @@
-#include "pixel_operations.h"
+#include "../../include/utils_neural/pixel_for_neural.h"
 
 static inline
 Uint8* pixel_ref(SDL_Surface* surf, unsigned x, unsigned y)

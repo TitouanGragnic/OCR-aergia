@@ -1,4 +1,4 @@
-#include "layer.h"
+#include "../../include/layer/layer.h"
 
 
 double randform(void)
@@ -118,7 +118,7 @@ void load_layer(Layer* layer, FILE* file)
     {
         layer->weights = malloc(sizeof(double) * layer->nb_neurons
          * layer->w_per_neuron);
-        layer->previous_dw = calloc(sizeof(double), 
+        layer->previous_dw = calloc(sizeof(double),
         layer->nb_neurons * layer->w_per_neuron);
         layer->bias = malloc(sizeof(double) * layer->nb_neurons);
         layer->errors = calloc(sizeof(double), layer->nb_neurons);

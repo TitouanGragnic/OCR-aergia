@@ -1,4 +1,4 @@
-#include "neural_network.h"
+#include "../../include/neural_network/neural_network.h"
 #include <err.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -72,7 +72,7 @@ void forward_prop(Network network, double* inputs, double* outputs, double* erro
     for(size_t i = 0; i < last->nb_neurons; i++)
         last->errors[i] =
          sigmoid_prime(last->outputs[i]) * (outputs[i] - last->outputs[i]);
-    
+
     for(size_t i = network.nb_layers - 2; i > 0; i--)
     {
         Layer* current = &network.layers[i];
@@ -83,7 +83,7 @@ void forward_prop(Network network, double* inputs, double* outputs, double* erro
             for(size_t done_i = 0; done_i <done->nb_neurons; done_i++)
                 sum += done->errors[done_i] *
                  done->weights[get_w(done, done_i, current_i)];
-            current->errors[current_i] = 
+            current->errors[current_i] =
             sigmoid_prime(current->outputs[current_i]) * sum;
         }
     }
@@ -112,7 +112,7 @@ void backward_prop(Network network, char string[])
             for(size_t done_i = 0; done_i < done->nb_neurons; done_i++)
             {
                 size_t j = get_w(current, current_i, done_i);
-                double deltaw = 
+                double deltaw =
                 l_rate * current->errors[current_i] * done->outputs[done_i];
                 current->weights[j] += deltaw + 0.1 * current->previous_dw[j];
                 current->previous_dw[j] = deltaw;
@@ -166,7 +166,7 @@ void print_training(Network network, Training training,
         	printf("\033[0;31m%.1f", array[j]);
     	printf(" \033[0;37m) ");
     	for(size_t j = 0; j < training.nb_out; j++)
-        	printf(" \033[0;32m%f ", 
+        	printf(" \033[0;32m%f ",
             	network.layers[network.nb_layers - 1].outputs[j]);
     	printf("\033[0;37m<- ");
     	array = training_in(&training, i);
