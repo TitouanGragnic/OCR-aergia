@@ -182,21 +182,21 @@ void print_training(Network network, Training training,
 
 void training_digits(size_t n, int print, int save, Network network)
 {
-    Training training = load_training("dataset/");
+    Training training = load_training("../../../neural_network/dataset/");
     for(size_t i = 0; i <= n; i++)
     {
         train_network(network, training, (i % print) == 0, "DIGITS");
         if((i % print) == 0)
             printf("EPOCH = %lu\n", i);
         if((i % save) == 0)
-            save_network(network, "logs/digits.txt");
+            save_network(network, "../../logs/digits.txt");
     }
     free_training(training);
 }
 
 int compute_digits(SDL_Surface* image)
 {
-    Network network = load_network("logs/digits.txt");
+    Network network = load_network("../../logs/digits.txt");
     double inputs[256];
     img_to_matrix(image, inputs);
     compute_network(network, inputs);
