@@ -314,9 +314,9 @@ int main(int argc, char **argv)
 
     //Top logo
     
-    GtkWidget *logo = gtk_image_new_from_file("logo.png");
+    GtkWidget *logo = gtk_image_new_from_file("logo2.png");
     GdkPixbuf *pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(logo));
-    pixbuf = gdk_pixbuf_scale_simple(pixbuf, width/75*24,width/75*7 , GDK_INTERP_BILINEAR);
+    pixbuf = gdk_pixbuf_scale_simple(pixbuf, width/75*24,width/75*8 , GDK_INTERP_BILINEAR);
     logo = gtk_image_new_from_pixbuf(pixbuf);
     gtk_box_pack_end(GTK_BOX(aergia.box_buttons), logo, TRUE, TRUE, 15);
 
