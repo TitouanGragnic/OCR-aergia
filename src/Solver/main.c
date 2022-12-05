@@ -5,20 +5,27 @@
 #include"solver.h"
 
 int main(int argc, char *argv[]){
-     if(argc != 2){
-	  printf("Argument error.\n");
-	  return 1;
-     }
-     char input[255];
-     read_file(argv[1],input);
+    if(argc ==1 || argc>3){
+        printf("Argument error.\n");
+        return 1;
+    }
+    char input[1024];
+    read_file(argv[1],input);
 
-     int tab[9][9];
-     decode(input,tab);
-     solve(tab);
+    int width = 9;
+    if (argc == 3)
+        width = 16;
 
-     char result[255];
-     toString(tab,result);
-     write_file(argv[1],result);
+    int* tab[width];
+    for(int i =0; i<width; i++)
+        tab[i] = malloc(width*sizeof(int));
+    decode(input,tab,width);
+    solve(tab, width);
 
-     return 0;
+    char result[1024];
+    toString(tab,result,width);
+    write_file(argv[1],result);
+    for(int i =0; i<width; i++)
+        free(tab[i]);
+    return 0;
 }
