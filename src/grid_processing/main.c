@@ -50,6 +50,21 @@ int main(int argc, char *argv[])
     SDL_Surface* screen_surface;
     int max;
     int dev_mod = argc != 3;
+    int width = 9;
+    // arg 3 == nothing -> devmod + !hexa
+    // arg 3 == 1 -> devmod + hexa
+    // arg 3 == 0 -> !devmod + hexa
+    // arg 3 == other -> !devmod + !hexa
+    if(argc == 3)
+    {
+        if(argv[2][0] == '1')
+        {
+            width = 16;
+            dev_mod = 0;
+        }
+        if(argv[2][0] == '0')
+            width = 16;
+    }
 
     // : Initialize the SDL
     init_sdl();
