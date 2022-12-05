@@ -7,51 +7,6 @@
 #include "utils/img_to_matrix.h"
 #include "utils/pixel_operations.h"
 
-void training_digits(size_t n, int print, int save, Network network)
-{
-    Training training = load_training("dataset/");
-    for(size_t i = 0; i <= n; i++)
-    {
-        train_network(network, training, (i % print) == 0, "DIGITS");
-        if((i % print) == 0)
-            printf("EPOCH = %lu\n", i);
-        if((i % save) == 0)
-            save_network(network, "logs/digits.txt");
-    }
-    free_training(training);
-}
-
-int compute_digits(SDL_Surface* image)
-{
-    Network network = load_network("logs/digits.txt");
-    double inputs[256];
-    img_to_matrix(image, inputs);
-    compute_network(network, inputs);
-    int res = extract_res(output_network(network), 10);
-    free_network(network);
-    return res;
-}
-
-int* final_function(char* path, int nb_output)
-{
-	int* res = malloc(sizeof(int) * nb_output * nb_output);
-	char filepath[4096];
-	int tmp = nb_output;
-	for(int i = 0; i < nb_output - 1; i++)
-	{
-		if(i == nb_output - 2)
-			tmp = 1;
-		for(int j = 0; j < tmp; j++)
-		{
-			sprintf(filepath, "%s/slot%d%d.png", path, i, j);
-			SDL_Surface* image = load_image(filepath);
-			res[i * nb_output + j] = compute_digits(image);
-			SDL_FreeSurface(image);
-		}
-	}
-	return res;
-}
-
 int main(int argc, char* argv[])
 {
 	//gérer les args + erreurs
@@ -63,7 +18,7 @@ int main(int argc, char* argv[])
     training_digits(5000, 25, 1000, network);
 	free_network(network);
 */
-	int* final = final_function("../grid_processing/output/slot", 10);
+	int* final = ocr_function("../grid_processing/output/slot", 10);
 	print_matrix(final, 9, 9);
 	free(final);
 	SDL_Surface* image = load_image("dataset/5/1.png");
