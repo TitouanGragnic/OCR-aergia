@@ -1,12 +1,23 @@
-run :
-	cat grid_00
-	gcc -Wall -Wextra -Werror -std=c99 -O1 -o solver *.c
-	./solver grid_00
-	cat grid_00.result
+# Simple SDL mini Makefile
 
-cleanE :
-	rm *[~#]
-clean :
-	rm solver
-	rm *.result
+CC=gcc
 
+CPPFLAGS=  -MMD -lm
+CFLAGS= -Wall -Wextra -Werror -fsanitize=address -std=c99 -O3 -lm -g
+LDFLAGS= -fsanitize=address
+LDLIBS=  -lm
+EXEC = main
+
+SRC = $(shell find $(SOURCE_DIR) -name "*.c")
+OBJ = ${SRC:.c=.o}
+all: ${EXEC}
+
+${EXEC}:${OBJ}
+	${CC} ${CFLAGS} ${LDLIBS} $^ -o $@
+
+
+clean:
+	${RM} ${OBJ} ${SRC:.c=.d}
+	${RM} ${EXEC}
+
+# END
