@@ -197,18 +197,19 @@ void training_digits(size_t n, int print, int save, Network network)
 int compute_digits(SDL_Surface* image)
 {
     Network network = load_network("logs/digits.txt");
-    double inputs[256];
+    double* inputs = malloc(sizeof(double) * 256);
     img_to_matrix(image, inputs);
     compute_network(network, inputs);
     int res = extract_res(output_network(network), 10);
-    free_network(network);
+    free(inputs);
+	free_network(network);
     return res;
 }
 
 int* ocr_function(char* path, int nb_output)
 {
 	int* res = malloc(sizeof(int) * nb_output * nb_output);
-    char filepath[4096];
+    char* filepath = malloc(4096 * sizeof(char));
     int tmp = 1;
 	int tmp1 = 10;
 	int tmp2 = 10;
@@ -231,6 +232,7 @@ int* ocr_function(char* path, int nb_output)
                 	SDL_FreeSurface(image);
             	}
     	}
+	free(filepath);
 	}
     return res;
 }
