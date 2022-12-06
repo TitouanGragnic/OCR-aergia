@@ -45,7 +45,7 @@ void* thread_slot(void* data_i)
         {
             int val = pixel_value(slot_surface,x,y);
 
-            if (val<100)
+            if (val<125)
             {
                 put_pixel_value(slot_surface,x,y,0);
                 put_pixel_value(result_surface,x,y,0);

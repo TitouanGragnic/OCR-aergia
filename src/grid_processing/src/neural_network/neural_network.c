@@ -256,7 +256,8 @@ Network load_network(const char* path)
         errx(1, "Path is invalid, we were unable to find the file.");
 
     Network network;
-    fscanf(file, "%lu", &network.nb_layers);
+    int res = fscanf(file, "%lu", &network.nb_layers);
+    res = res;
     network.layers = malloc(sizeof(Layer) * network.nb_layers);
 
     for(size_t i = 0; i < network.nb_layers; i++)

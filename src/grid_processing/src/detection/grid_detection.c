@@ -172,9 +172,10 @@ SDL_Surface *blobSlot(SDL_Surface *img, int size, SDL_Surface *start)
      int var = 1;
      if(maxi.n_pixels == 0)
      {
-	  maxi.max_y = img->h;
-	  maxi.max_x = img->w;
-	  var = 0;
+         for(int i = 0; i<16; i++)
+             for(int j = 0; j<16; j++)
+                 put_pixel_value(start, i, j, 255);
+         var = 0;
      }
      for(int i = 0;i<w && var;i++)
          for(int j = 0;j<h;j++)

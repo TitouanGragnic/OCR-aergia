@@ -111,8 +111,8 @@ void load_layer(Layer* layer, FILE* file)
     given in parameter, and put them into the layer
     struct.
     */
-    fscanf(file, "%lu", &layer->nb_neurons);
-    fscanf(file, "%lu", &layer->w_per_neuron);
+    int res = fscanf(file, "%lu", &layer->nb_neurons);
+    res = fscanf(file, "%lu", &layer->w_per_neuron);
 
     if(layer->w_per_neuron)
     {
@@ -124,9 +124,9 @@ void load_layer(Layer* layer, FILE* file)
         layer->errors = calloc(sizeof(double), layer->nb_neurons);
         for(size_t i = 0; i < layer->nb_neurons; i++)
         {
-            fscanf(file, "%lf", &layer->bias[i]);
+            res = fscanf(file, "%lf", &layer->bias[i]);
             for(size_t j = 0; j < layer->w_per_neuron; j++)
-                fscanf(file, "%lf", &layer->weights[get_w(layer, i, j)]);
+                res = fscanf(file, "%lf", &layer->weights[get_w(layer, i, j)]);
         }
     }
     else
@@ -137,4 +137,5 @@ void load_layer(Layer* layer, FILE* file)
         layer->errors = NULL;
     }
     layer->outputs = malloc(sizeof(double) * layer->nb_neurons);
+    res = res;
 }
