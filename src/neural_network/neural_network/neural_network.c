@@ -56,7 +56,7 @@ double error_network(Network network)
 	Layer* last_layer = &network.layers[network.nb_layers - 1];
 	for(size_t i = 0; i < last_layer->nb_neurons; i++)
 		error += pow(last_layer->errors[i], 2);
-	return error * 0.5;
+	return sqrt(error); //error * 0.5
 }
 
 void forward_prop(Network network, double* inputs, double* outputs, double* error)

@@ -196,33 +196,45 @@ void training_digits(size_t n, int print, int save, Network network)
 
 int compute_digits(SDL_Surface* image)
 {
-    Network network = load_network("../../logs/digits.txt");
-    double inputs[256];
+    Network network = load_network("logs/digits.txt");
+    double* inputs = malloc(sizeof(double) * 256);
     img_to_matrix(image, inputs);
     compute_network(network, inputs);
     int res = extract_res(output_network(network), 10);
-    free_network(network);
+    free(inputs);
+        free_network(network);
     return res;
 }
 
-int* final_function(char* path, int nb_output)
+int* ocr_function(char* path, int nb_output)
 {
-        int* res = malloc(sizeof(int) * nb_output * nb_output);
-        char filepath[4096];
-        int tmp = nb_output;
-        for(int i = 0; i < nb_output - 1; i++)
+    int* res = malloc(sizeof(int) * nb_output * nb_output);
+    char* filepath = malloc(4096 * sizeof(char));
+    int tmp = 1;
+    int tmp1 = 10;
+    int tmp2 = 10;
+
+    if(nb_output == 17)
+		tmp = 3;
+    if(nb_output == 10)
+        tmp1 = 9;
+    for(int k = 0; k < tmp; k++)
+    {
+    	for(int i = 0; i < tmp1 - 1; i++)
         {
-                if(i == nb_output - 2)
-                        tmp = 1;
-                for(int j = 0; j < tmp; j++)
-                {
-                        sprintf(filepath, "%s/slot%d%d.png", path, i, j);
-                        SDL_Surface* image = load_image(filepath);
-                        res[i * nb_output + j] = compute_digits(image);
-                        SDL_FreeSurface(image);
-                }
+			if(i == 8 && tmp == 1)
+				tmp2 = 1;
+            for(int j = 0; j < tmp2; j++)
+            {
+				sprintf(filepath, "%s/slot%d%d%d.png", path, k, i, j);
+                SDL_Surface* image = load_image(filepath);
+                res[i * nb_output + j] = compute_digits(image);
+                SDL_FreeSurface(image);
+            }
         }
-        return res;
+        free(filepath);
+    }
+    return res;
 }
 
 void save_network(Network network, const char* path)

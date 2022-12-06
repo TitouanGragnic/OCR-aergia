@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
     int res;
     if(hexa)
     {
-        grid = final_function("output/slot", 16);
+        grid = ocr_function("output/slot", 16);
         boolean = malloc(256*sizeof(int));
         for(int i = 0;i<256;i++)
         {
@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        grid = final_function("output/slot", 9);
+        grid = ocr_function("output/slot", 9);
         boolean = malloc(81*sizeof(int));
         for(int i = 0; i<81; i++)
         {
