@@ -206,9 +206,9 @@ int compute_digits(SDL_Surface* image)
     return res;
 }
 
-int* ocr_function(char* path, int nb_output)
+void ocr_function(char* path, int* grid, int nb_output)
 {
-    int* res = malloc(sizeof(int) * nb_output * nb_output);
+    //int* res = malloc(sizeof(int) * nb_output * nb_output); //[nb_output * nb_output];
     char* filepath = malloc(4096 * sizeof(char));
     int tmp = 1;
     int tmp1 = 10;
@@ -220,7 +220,7 @@ int* ocr_function(char* path, int nb_output)
         tmp1 = 9;
     for(int k = 0; k < tmp; k++)
     {
-    	for(int i = 0; i < tmp1 - 1; i++)
+    	for(int i = 0; i < tmp1; i++)
         {
 			if(i == 8 && tmp == 1)
 				tmp2 = 1;
@@ -228,13 +228,13 @@ int* ocr_function(char* path, int nb_output)
             {
 				sprintf(filepath, "%s/slot%d%d%d.png", path, k, i, j);
                 SDL_Surface* image = load_image(filepath);
-                res[i * nb_output + j] = compute_digits(image);
+                grid[i * nb_output + j] = compute_digits(image);
                 SDL_FreeSurface(image);
             }
         }
         free(filepath);
     }
-    return res;
+    //return res;
 }
 
 void save_network(Network network, const char* path)

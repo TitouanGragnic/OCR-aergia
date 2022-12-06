@@ -67,7 +67,6 @@ void forward_prop(Network network, double* inputs, double* outputs, double* erro
     update the errors for each neuron of each layer.
     */
     compute_network(network, inputs);
-	*error += error_network(network);
     Layer* last = &network.layers[network.nb_layers - 1];
     for(size_t i = 0; i < last->nb_neurons; i++)
         last->errors[i] =
@@ -87,6 +86,7 @@ void forward_prop(Network network, double* inputs, double* outputs, double* erro
             sigmoid_prime(current->outputs[current_i]) * sum;
         }
     }
+	*error += error_network(network);
 
 }
 
@@ -220,19 +220,19 @@ int* ocr_function(char* path, int nb_output)
 		tmp1 = 9;
 	for(int k = 0; k < tmp; k++)
 	{
-    	for(int i = 0; i < tmp1 - 1; i++)
+    	for(int i = 0; i < tmp1; i++)
     	{
 			if(i == 8 && tmp == 1)
 				tmp2 = 1;
-            	for(int j = 0; j < tmp2; j++)
-            	{
-					sprintf(filepath, "%s/slot%d%d%d.png", path, k, i, j);
-                	SDL_Surface* image = load_image(filepath);
-                	res[i * nb_output + j] = compute_digits(image);
-                	SDL_FreeSurface(image);
-            	}
+            for(int j = 0; j < tmp2; j++)
+            {
+				sprintf(filepath, "%s/slot%d%d%d.png", path, k, i, j);
+                SDL_Surface* image = load_image(filepath);
+                res[i * nb_output + j] = compute_digits(image);
+                SDL_FreeSurface(image);
+            }
     	}
-	free(filepath);
+		free(filepath);
 	}
     return res;
 }

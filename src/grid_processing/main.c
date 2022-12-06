@@ -171,7 +171,9 @@ int main(int argc, char *argv[])
     int res;
     int width = hexa ? 16 : 9;
 
-    grid = ocr_function("output/slot", width);
+    grid = malloc(sizeof(int) * width * width);
+	ocr_function("output/slot", grid, width + 1);
+	print_matrix(grid, width, width);
     boolean = malloc(width*width*sizeof(int));
     for(int i = 0;i<width*width;i++)
     {
@@ -201,5 +203,11 @@ int main(int argc, char *argv[])
 
     free(out.threads);
     free(out.out);
+
+	for(int i = 0; i < width; i++)
+		free(result[i]);
+	free(result);
+	free(grid);
+	free(boolean);
     return 0;
 }
