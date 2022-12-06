@@ -180,6 +180,63 @@ void print_training(Network network, Training training,
 		printf("error: %.15f\n", error);
 }
 
+void training_digits(size_t n, int print, int save, Network network)
+{
+    Training training = load_training("dataset/");
+    for(size_t i = 0; i <= n; i++)
+    {
+        train_network(network, training, (i % print) == 0, "DIGITS");
+        if((i % print) == 0)
+            printf("EPOCH = %lu\n", i);
+        if((i % save) == 0)
+            save_network(network, "logs/digits.txt");
+    }
+    free_training(training);
+}
+
+int compute_digits(SDL_Surface* image)
+{
+    Network network = load_network("logs/digits.txt");
+    double* inputs = malloc(sizeof(double) * 256);
+    img_to_matrix(image, inputs);
+    compute_network(network, inputs);
+    int res = extract_res(output_network(network), 10);
+    free(inputs);
+	free_network(network);
+    return res;
+}
+
+int* ocr_function(char* path, int nb_output)
+{
+	int* res = malloc(sizeof(int) * nb_output * nb_output);
+    char* filepath = malloc(4096 * sizeof(char));
+    int tmp = 1;
+	int tmp1 = 10;
+	int tmp2 = 10;
+
+	if(nb_output == 17)
+		tmp = 3;
+	if(nb_output == 10)
+		tmp1 = 9;
+	for(int k = 0; k < tmp; k++)
+	{
+    	for(int i = 0; i < tmp1 - 1; i++)
+    	{
+			if(i == 8 && tmp == 1)
+				tmp2 = 1;
+            	for(int j = 0; j < tmp2; j++)
+            	{
+					sprintf(filepath, "%s/slot%d%d%d.png", path, k, i, j);
+                	SDL_Surface* image = load_image(filepath);
+                	res[i * nb_output + j] = compute_digits(image);
+                	SDL_FreeSurface(image);
+            	}
+    	}
+	free(filepath);
+	}
+    return res;
+}
+
 void save_network(Network network, const char* path)
 {
     /*
@@ -189,7 +246,7 @@ void save_network(Network network, const char* path)
     FILE* fptr;
     fptr = fopen(path, "w");
     if(fptr == NULL)
-        errx(1, "Path is invalid, we were unable to find the file.");
+        errx(1, "save_network: Path is invalid, we were unable to find the file.");
     else
     {
         fprintf(fptr, "%ld\n", network.nb_layers);
@@ -208,7 +265,7 @@ Network load_network(const char* path)
     FILE* file = fopen(path, "r");
 
     if(!file)
-        errx(1, "Path is invalid, we were unable to find the file.");
+        errx(1, "load_network: Path is invalid, we were unable to find the file.");
 
     Network network;
     fscanf(file, "%lu", &network.nb_layers);
