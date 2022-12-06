@@ -18,6 +18,7 @@
 #include "include/color_treatment/adaptive_threshold.h"
 #include "include/color_treatment/edge_detection.h"
 #include "include/color_treatment/inverse.h"
+#include "include/color_treatment/bold.h"
 
 #include "include/detection/grid_detection.h"
 #include "include/detection/hough_transform.h"
@@ -155,6 +156,7 @@ int main(int argc, char *argv[])
 
     // ----------------------Correct_Perspective-------------------------------
     bin_surface = correct_perspective(edge_surface, bin_surface);
+    bin_surface = bold(bin_surface, 1);
     make_thread(&out, bin_surface, "output/treatment/perspective.png");
 
     if(dev_mod)
@@ -163,7 +165,6 @@ int main(int argc, char *argv[])
         printf("detection finish\n");
         wait_for_keypressed();
     }
-
     slicing(bin_surface,hexa);
     int *grid;
     int *boolean;

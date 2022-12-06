@@ -16,7 +16,7 @@ SDL_Surface *bold(SDL_Surface *im, int pui)
 	    SDL_GetRGB(pixel, im->format, &r, &g, &b);
 	    if(r == 0){
 		for(int kx=-pui; kx <= pui; kx++) {
-		    for(int ky=-pui; ky <= 1; ky++) {
+		    for(int ky=-pui; ky <= pui; ky++) {
 			if(ix+kx>=0 && ix+kx<im->w && iy+ky>=0 && iy+ky<im->h){
 			    put_pixel(oi,ix+kx,iy+ky,newpixel);
 			}
@@ -27,6 +27,6 @@ SDL_Surface *bold(SDL_Surface *im, int pui)
 		put_pixel(oi,ix,iy,pixel);
 	}
     }
-    //SDL_FreeSurface(im);
+    SDL_FreeSurface(im);
     return oi;
 }

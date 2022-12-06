@@ -39,24 +39,7 @@ void* thread_slot(void* data_i)
     }
     result_surface = resize_slot(copy);
     slot_surface = resize_slot(slot_surface);
-    for(int x = 0;x<16;x++)
-    {
-        for(int y = 0;y<16; y++)
-        {
-            int val = pixel_value(slot_surface,x,y);
 
-            if (val<175)
-            {
-                put_pixel_value(slot_surface,x,y,0);
-                put_pixel_value(result_surface,x,y,0);
-            }
-            else
-            {
-                put_pixel_value(slot_surface,x,y,255);
-                put_pixel_value(result_surface,x,y,255);
-            }
-        }
-    }
     for (int x = 0;x<16;x++)
     {
         for (int y = 0; y<3; y++)

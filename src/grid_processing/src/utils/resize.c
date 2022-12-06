@@ -56,7 +56,7 @@ SDL_Surface* resize_slot(SDL_Surface* start_surface)
     int w = start_surface->w;
     int h = start_surface->h;
     double s;
-
+    Uint8 r,g,b;
     if(w>h)
         s = (double)w/16;
     else
@@ -70,8 +70,12 @@ SDL_Surface* resize_slot(SDL_Surface* start_surface)
         for(int j = 0; j< 16; j++)
         {
             newPixel =get_average_color(start_surface,i*s,j*s,s,start_surface->format);
+            SDL_GetRGB(newPixel,start_surface->format,&r,&g,&b);
+            if(0.33*r+0.33*g+0.33*b < 150)
+                newPixel = SDL_MapRGB(resize_surface->format, 0, 0, 0);
+            else
+                newPixel = SDL_MapRGB(resize_surface->format, 255, 255, 255);
             put_pixel(resize_surface,i,j,newPixel);
-
         }
 
     SDL_FreeSurface(start_surface);

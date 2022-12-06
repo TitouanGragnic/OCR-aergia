@@ -112,7 +112,7 @@ SDL_Surface *blobSlot(SDL_Surface *img, int size, SDL_Surface *start)
      int sum_x=0,sum_y=0,n_pixels=0,max_x=0,max_y=0;
      int min_x = w+1, min_y=h+1;
 
-     for(int i = 3;i<13;i++)
+     for(int i = 4;i<13;i++)
      {
 	  for(int j = 3;j<13;j++)
 	  {
