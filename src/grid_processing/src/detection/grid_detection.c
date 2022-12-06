@@ -94,16 +94,13 @@ blob blobFromImage(SDL_Surface *img, int size)
 
 SDL_Surface *blobSlot(SDL_Surface *img, int size, SDL_Surface *start)
 {
-
-     Uint32 pixel;
-     Uint8 r,g,b;
      int max = 0;
      blob maxi = {0,0,0,0,0,0,0,0};
      int w = img->w;
      int h = img->h;
      double id = 1;
 
-     double *matr = calloc(w*h,sizeof(double));
+     double *matr = malloc(256*sizeof(double));
 
      stack* S = get_empty_stack();
 
@@ -115,16 +112,13 @@ SDL_Surface *blobSlot(SDL_Surface *img, int size, SDL_Surface *start)
 	  }
      }
 
-     for(int i = 1;i<w-1;i++)
+     for(int i = 0;i<w;i++)
      {
-	  for(int j = 1;j<h-1;j++)
+	  for(int j = 0;j<h;j++)
 	  {
 	       id++;
-	       pixel = get_pixel(img, i, j);
-	       SDL_GetRGB(pixel, img->format, &r, &g, &b);
-	       if(r == 255 || matr[i*h+j] > -1)
-		    continue;
-
+	       if (pixel_value(img, i, j) == 255 || matr[i*h+j] > -1)
+                   continue;
 	       coor start = {i,j};
                push_stack(S,start);
 
@@ -150,11 +144,8 @@ SDL_Surface *blobSlot(SDL_Surface *img, int size, SDL_Surface *start)
 			 {
                              if(l<0 || k<0 || l>= w || k>= h)
                                  continue;
-			      pixel = get_pixel(img, l, k);
-			      SDL_GetRGB(pixel, img->format, &r, &g, &b);
-			      if(r == 255 || matr[l*h+k] > -1)
-				   continue;
-
+                             if(pixel_value(img, l, k) == 255 || matr[l*h+k] > -1)
+                                 continue;
 			      coor next = {l,k};
 			      matr[l*h+k] = id;
 			      //push next in sack
@@ -186,16 +177,14 @@ SDL_Surface *blobSlot(SDL_Surface *img, int size, SDL_Surface *start)
 	  var = 0;
      }
      for(int i = 0;i<w && var;i++)
-     {
-	  for(int j = 0;j<h;j++)
-	  {
-	       if(matr[i*h+j] != maxi.ID)
-	       {
-		    Uint32 newpixel = SDL_MapRGB(start->format, 255, 255, 255);
-		    put_pixel(start,i,j,newpixel);
-	       }
-	  }
-     }
+         for(int j = 0;j<h;j++)
+         {
+             if(matr[i*h+j] != maxi.ID)
+                 put_pixel_value(start, i, j, 255);
+             else
+                 put_pixel_value(start, i, j, 0);
+         }
+
      free(matr);
      free_stack(S);
      SDL_FreeSurface(img);

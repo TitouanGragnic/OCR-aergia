@@ -25,6 +25,10 @@
 
 #include "include/slot_processing/slicing.h"
 
+#include "include/neural_network/neural_network.h"
+
+#include "include/solver/solver.h"
+
 struct carth{
     int x;
     int y;
@@ -161,7 +165,50 @@ int main(int argc, char *argv[])
     }
 
     slicing(bin_surface,hexa);
-
+    int *grid;
+    int *boolean;
+    int res;
+    if(hexa)
+    {
+        grid = final_function("output/slot", 16);
+        boolean = malloc(256*sizeof(int));
+        for(int i = 0;i<256;i++)
+        {
+            if (grid[i] == 0)
+                boolean[i] = 0;
+            else
+                boolean[i] = 1;
+        }
+        int **result = malloc(16*sizeof(int *));
+        for (int i = 0; i<16; i++)
+        {
+            result[i] = malloc(16*sizeof(int));
+            for(int j = 0; j<16; j++)
+                result[i][j] = grid[i*16+j];
+        }
+        res = solve(result, 16);
+    }
+    else
+    {
+        grid = final_function("output/slot", 9);
+        boolean = malloc(81*sizeof(int));
+        for(int i = 0; i<81; i++)
+        {
+            if (grid[i] == 0)
+                boolean[i] = 0;
+            else
+                boolean[i] = 1;
+        }
+        int **result = malloc(9*sizeof(int *));
+        for (int i = 0; i<9; i++)
+        {
+            result[i] = malloc(9*sizeof(int));
+            for(int j = 0; j<9; j++)
+                result[i][j] = grid[i*9+j];
+        }
+        res = solve(result, 9);
+    }
+    res += 1;
     // ----------------------Free----------------------------------------------
     //SDL_FreeSurface(bin_surface);
     SDL_FreeSurface(edge_surface);

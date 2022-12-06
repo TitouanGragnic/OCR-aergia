@@ -32,6 +32,7 @@ void* thread_slot(void* data_i)
         for(int y = 0;y<newH;y++)
         {
             int val = pixel_value(main_surface,data->i*newW+x,data->j*newH+y);
+
             put_pixel_value(slot_surface,x,y,val);
             put_pixel_value(copy,x,y,val);
         }
@@ -42,28 +43,47 @@ void* thread_slot(void* data_i)
     {
         for(int y = 0;y<16; y++)
         {
-            int val = pixel_value(result_surface,x,y);
-            if (val<128)
+            int val = pixel_value(slot_surface,x,y);
+
+            if (val<100)
+            {
+                put_pixel_value(slot_surface,x,y,0);
                 put_pixel_value(result_surface,x,y,0);
+            }
             else
+            {
+                put_pixel_value(slot_surface,x,y,255);
                 put_pixel_value(result_surface,x,y,255);
+            }
         }
     }
     for (int x = 0;x<16;x++)
     {
         for (int y = 0; y<3; y++)
+        {
             put_pixel_value(result_surface,x,y,255);
+            put_pixel_value(slot_surface,x,y,255);
+        }
         for (int y = 13;y<16;y++)
-            put_pixel(result_surface,x,y,255);
+        {
+            put_pixel_value(result_surface,x,y,255);
+            put_pixel_value(slot_surface,x,y,255);
+        }
     }
-    for (int y = 2;y<14;y++)
+    for (int y = 0;y<16;y++)
     {
         for (int x = 0;x<3; x++)
-            put_pixel(result_surface,x,y,255);
-        for (int x = 13;x<16;x++)
+        {
             put_pixel_value(result_surface,x,y,255);
+            put_pixel_value(slot_surface,x,y,255);
+        }
+        for (int x = 13;x<16;x++)
+        {
+            put_pixel_value(result_surface,x,y,255);
+            put_pixel_value(slot_surface,x,y,255);
+        }
     }
-    slot_surface = blobSlot(result_surface, 0, slot_surface);
+    slot_surface = blobSlot(result_surface, 15, slot_surface);
 
     file_name[16] = '0'+data->number/100;
     data->number = data->number%100;
