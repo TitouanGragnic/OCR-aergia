@@ -45,7 +45,7 @@ void* thread_slot(void* data_i)
         {
             int val = pixel_value(slot_surface,x,y);
 
-            if (val<125)
+            if (val<175)
             {
                 put_pixel_value(slot_surface,x,y,0);
                 put_pixel_value(result_surface,x,y,0);
@@ -83,7 +83,7 @@ void* thread_slot(void* data_i)
             put_pixel_value(slot_surface,x,y,255);
         }
     }
-    slot_surface = blobSlot(result_surface, 15, slot_surface);
+    slot_surface = blobSlot(result_surface, 10, slot_surface);
 
     file_name[16] = '0'+data->number/100;
     data->number = data->number%100;
