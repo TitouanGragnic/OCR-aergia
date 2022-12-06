@@ -138,14 +138,14 @@ int main(int argc, char *argv[])
     }
 
     // ----------------------Blob_detection------------------------------------
-    blob result = blobFromImage(edge_surface, 1000);
+    blob result_blob = blobFromImage(edge_surface, 1000);
 
     if(dev_mod)
         screen_surface = display_image(edge_surface);
 
     // ----------------------Scale---------------------------------------------
-    edge_surface = scale(edge_surface, result.min_x, result.min_y, result.max_x,result.max_y);
-    bin_surface = scale(bin_surface, result.min_x, result.min_y, result.max_x,result.max_y);
+    edge_surface = scale(edge_surface, result_blob.min_x, result_blob.min_y, result_blob.max_x,result_blob.max_y);
+    bin_surface = scale(bin_surface, result_blob.min_x, result_blob.min_y, result_blob.max_x,result_blob.max_y);
     make_thread(&out, bin_surface, "output/treatment/scale.png");
 
     if(dev_mod)
@@ -169,46 +169,26 @@ int main(int argc, char *argv[])
     int *grid;
     int *boolean;
     int res;
-    if(hexa)
+    int width = hexa ? 16 : 9;
+
+    grid = final_function("output/slot", width);
+    boolean = malloc(width*width*sizeof(int));
+    for(int i = 0;i<width*width;i++)
     {
-        grid = final_function("output/slot", 16);
-        boolean = malloc(256*sizeof(int));
-        for(int i = 0;i<256;i++)
-        {
-            if (grid[i] == 0)
-                boolean[i] = 0;
-            else
-                boolean[i] = 1;
-        }
-        int **result = malloc(16*sizeof(int *));
-        for (int i = 0; i<16; i++)
-        {
-            result[i] = malloc(16*sizeof(int));
-            for(int j = 0; j<16; j++)
-                result[i][j] = grid[i*16+j];
-        }
-        res = solve(result, 16);
+        if (grid[i] == 0)
+            boolean[i] = 0;
+        else
+            boolean[i] = 1;
     }
-    else
+    int **result = malloc(width*sizeof(int *));
+    for (int i = 0; i<width; i++)
     {
-        grid = final_function("output/slot", 9);
-        boolean = malloc(81*sizeof(int));
-        for(int i = 0; i<81; i++)
-        {
-            if (grid[i] == 0)
-                boolean[i] = 0;
-            else
-                boolean[i] = 1;
-        }
-        int **result = malloc(9*sizeof(int *));
-        for (int i = 0; i<9; i++)
-        {
-            result[i] = malloc(9*sizeof(int));
-            for(int j = 0; j<9; j++)
-                result[i][j] = grid[i*9+j];
-        }
-        res = solve(result, 9);
+        result[i] = malloc(width*sizeof(int));
+        for(int j = 0; j<width; j++)
+            result[i][j] = grid[i*width+j];
     }
+    res = solve(result, width);
+
     res += 1;
     // ----------------------Free----------------------------------------------
     //SDL_FreeSurface(bin_surface);
