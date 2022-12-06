@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
     SDL_Surface* edge_surface;
     SDL_Surface* bin_surface;
-    SDL_Surface* screen_surface;
+    SDL_Surface* screen_surface = NULL;
     int max;
     int dev_mod = argc != 3 ||argv[2][0] == '1';
     int hexa = argc==3 && (argv[2][0] == '1' ||argv[2][0] == '0' );
@@ -172,8 +172,8 @@ int main(int argc, char *argv[])
     int width = hexa ? 16 : 9;
 
     grid = malloc(sizeof(int) * width * width);
-	ocr_function("output/slot", grid, width + 1);
-	print_matrix(grid, width, width);
+    ocr_function("output/slot", grid, width + 1);
+    print_matrix(grid, width, width);
     boolean = malloc(width*width*sizeof(int));
     for(int i = 0;i<width*width;i++)
     {
@@ -190,12 +190,19 @@ int main(int argc, char *argv[])
             result[i][j] = grid[i*width+j];
     }
     res = solve(result, width);
-
+    printf("solved\n");
     res += 1;
+
+    int tmp[81];
+    for(int i =0 ;i<81; i++)
+      tmp[i] = result[i/9][i%9];
+    print_matrix(tmp, 9,9);
+
+
     // ----------------------Free----------------------------------------------
     //SDL_FreeSurface(bin_surface);
     SDL_FreeSurface(edge_surface);
-    if(dev_mod)
+    if(dev_mod && screen_surface != NULL)
         SDL_FreeSurface(screen_surface);
 
     for(size_t i =0; i<out.th; i++)
@@ -204,10 +211,10 @@ int main(int argc, char *argv[])
     free(out.threads);
     free(out.out);
 
-	for(int i = 0; i < width; i++)
-		free(result[i]);
-	free(result);
-	free(grid);
-	free(boolean);
+    for(int i = 0; i < width; i++)
+        free(result[i]);
+    free(result);
+    free(grid);
+    free(boolean);
     return 0;
 }
