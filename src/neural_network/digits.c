@@ -10,14 +10,13 @@
 int main(int argc, char* argv[])
 {
 	//gérer les args + erreurs
-
 /*
 	size_t nb_layer = 4;
 	size_t Layers[] = {256, 128, 64, 10};
 	Network network = initialize_network(nb_layer, Layers);
-    training_digits(500, 50, 100, network);
+    training_digits(100, 50, 100, network);
 	free_network(network);
-*/
+*/	
 	int* final = ocr_function("../grid_processing/output/slot", 10);
 	print_matrix(final, 9, 9);
 	free(final);
