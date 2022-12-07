@@ -8,6 +8,7 @@
 #include "include/utils/scale.h"
 #include "include/utils/resize.h"
 #include "include/utils/thread.h"
+#include "include/utils/mat_digit.h"
 
 #include "include/color_treatment/smoothing.h"
 #include "include/color_treatment/increase_contrast.h"
@@ -31,7 +32,6 @@
 
 #include "include/solver/solver.h"
 
-#include "include/matDigit.h"
 
 struct carth{
     int x;
@@ -193,7 +193,6 @@ int main(int argc, char *argv[])
             result[i][j] = grid[i*width+j];
     }
     res = solve(result, width);
-    printf("solved\n");
     res += 1;
 
     int tmp[81];
@@ -201,7 +200,7 @@ int main(int argc, char *argv[])
         tmp[i] = result[i/9][i%9];
     print_matrix(tmp, 9,9);
 
-
+    int ** matDigit = get_digit_mat();
     for(int i = 0; i<width; i++)
         for(int j = 0; j <width; j++)
         {
@@ -214,7 +213,9 @@ int main(int argc, char *argv[])
                                 bin_surface->h/width*(j+1));
             }
         }
-
+    for(int i =0; i<9; i++)
+        free(matDigit[i]);
+    free(matDigit);
 
     screen_surface = display_image(bin_surface);
     wait_for_keypressed();
