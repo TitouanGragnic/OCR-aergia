@@ -71,7 +71,7 @@ void load(GtkButton* button, gpointer data)
 	  mode = "2";
       
         //treatment here
-        char commande[100];
+        char commande[200];
         sprintf(commande,"%s %s %s","./main", filename,mode);
         int res = system(commande);
 	res = res;
@@ -206,6 +206,8 @@ int main(int argc, char **argv)
     int height = 800;
 
     //GdkRGBA bgcolor = {0.40,0.60,0.63,1};
+    const char* __asan_default_option() { return "detect_leaks = 0";}
+    __asan_default_option();
 
     gtk_init(&argc, &argv);
 
@@ -233,6 +235,7 @@ int main(int argc, char **argv)
     gtk_window_set_title(GTK_WINDOW(window),"Aergia 0.4");
     gtk_window_set_default_size(GTK_WINDOW(window), width, height);
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+    
     //gtk_window_set_resizable(GTK_WINDOW(window),FALSE); //disable resize
 
     //SET BOXES
@@ -244,12 +247,38 @@ int main(int argc, char **argv)
 
     GtkWidget *empty = gtk_image_new_from_file("empty2.png");
 
+    //Icon
+    GtkWidget *foldericon;
+    foldericon = gtk_image_new_from_icon_name ("folder",GTK_ICON_SIZE_MENU);
+    GtkWidget *gonexticon;
+    gonexticon = gtk_image_new_from_icon_name ("go-next",GTK_ICON_SIZE_MENU);
+    GtkWidget *goprevicon;
+    goprevicon = gtk_image_new_from_icon_name ("go-previous",GTK_ICON_SIZE_MENU);
+    GtkWidget *goendicon;
+    goendicon = gtk_image_new_from_icon_name ("go-last",GTK_ICON_SIZE_MENU);
+    GtkWidget *quiticon;
+    quiticon = gtk_image_new_from_icon_name ("window-close",GTK_ICON_SIZE_MENU);
     //buttons
-    load_button = gtk_button_new_with_label("Load image");
-    step_button = gtk_button_new_with_label("Next Step");
-    prev_button = gtk_button_new_with_label("Previous Step");
-    end_button = gtk_button_new_with_label("Operate Magic");
-    quit_button = gtk_button_new_with_label("Quit");
+    
+    load_button = gtk_button_new_with_label(" Load image");
+    gtk_button_set_always_show_image (GTK_BUTTON(load_button),TRUE);
+    gtk_button_set_image (GTK_BUTTON(load_button),foldericon);
+    
+    step_button = gtk_button_new_with_label(" Next Step");
+    gtk_button_set_always_show_image (GTK_BUTTON(step_button),TRUE);
+    gtk_button_set_image (GTK_BUTTON(step_button),gonexticon);
+    
+    prev_button = gtk_button_new_with_label(" Previous Step");
+    gtk_button_set_always_show_image (GTK_BUTTON(prev_button),TRUE);
+    gtk_button_set_image (GTK_BUTTON(prev_button),goprevicon);
+    
+    end_button = gtk_button_new_with_label(" Operate Magic");
+    gtk_button_set_always_show_image (GTK_BUTTON(end_button),TRUE);
+    gtk_button_set_image (GTK_BUTTON(end_button),goendicon);
+    
+    quit_button = gtk_button_new_with_label(" Quit");
+    gtk_button_set_always_show_image (GTK_BUTTON(quit_button),TRUE);
+    gtk_button_set_image (GTK_BUTTON(quit_button),quiticon);
 
     //names
     gtk_widget_set_name(load_button,"load_button");
@@ -264,6 +293,8 @@ int main(int argc, char **argv)
     gtk_widget_set_size_request(GTK_WIDGET(end_button),150,50);
     gtk_widget_set_size_request(GTK_WIDGET(quit_button),150,50);
 
+    
+    //enabling/disabling 
     gtk_widget_set_sensitive(GTK_WIDGET(step_button),FALSE);
     gtk_widget_set_sensitive(GTK_WIDGET(prev_button),FALSE);
     gtk_widget_set_sensitive(GTK_WIDGET(end_button),FALSE);
