@@ -287,11 +287,11 @@ int main(int argc, char **argv)
     gtk_widget_set_name(end_button,"end_button");
     
     //size
-    gtk_widget_set_size_request(GTK_WIDGET(load_button),150,50);
-    gtk_widget_set_size_request(GTK_WIDGET(step_button),150,50);
-    gtk_widget_set_size_request(GTK_WIDGET(prev_button),150,50);
-    gtk_widget_set_size_request(GTK_WIDGET(end_button),150,50);
-    gtk_widget_set_size_request(GTK_WIDGET(quit_button),150,50);
+    gtk_widget_set_size_request(GTK_WIDGET(load_button),100,50);
+    gtk_widget_set_size_request(GTK_WIDGET(step_button),100,50);
+    gtk_widget_set_size_request(GTK_WIDGET(prev_button),100,50);
+    gtk_widget_set_size_request(GTK_WIDGET(end_button),100,50);
+    gtk_widget_set_size_request(GTK_WIDGET(quit_button),100,50);
 
     
     //enabling/disabling 
@@ -308,14 +308,14 @@ int main(int argc, char **argv)
     gtk_box_pack_end(GTK_BOX(box_button), hex_mode, TRUE, FALSE, 20);
 
 
-    gtk_widget_set_size_request(GTK_WIDGET(empty),650,0);
+    gtk_widget_set_size_request(GTK_WIDGET(empty),850,0);
     gtk_box_pack_start(GTK_BOX(box_visu), empty, TRUE, TRUE, 20);
 
     gtk_box_pack_end(GTK_BOX(box_visu),GTK_WIDGET(status), TRUE, TRUE, 20);
 
     gtk_container_add(GTK_CONTAINER(window),box_main);
-    gtk_box_pack_start(GTK_BOX(box_main),box_button,TRUE,TRUE,50);
-    gtk_box_pack_start(GTK_BOX(box_main),box_visu,TRUE,TRUE,50);
+    gtk_box_pack_start(GTK_BOX(box_main),box_button,TRUE,FALSE,50);
+    gtk_box_pack_start(GTK_BOX(box_main),box_visu,TRUE,FALSE,50);
 
     //colors
     //gtk_widget_override_background_color (window,GTK_STATE_FLAG_NORMAL,&bgcolor);
@@ -347,7 +347,7 @@ int main(int argc, char **argv)
     
     GtkWidget *logo = gtk_image_new_from_file("logo2.png");
     GdkPixbuf *pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(logo));
-    pixbuf = gdk_pixbuf_scale_simple(pixbuf, width/75*24,width/75*8 , GDK_INTERP_BILINEAR);
+    pixbuf = gdk_pixbuf_scale_simple(pixbuf, width/75*36,width/75*12 , GDK_INTERP_BILINEAR);
     logo = gtk_image_new_from_pixbuf(pixbuf);
     gtk_box_pack_end(GTK_BOX(aergia.box_buttons), logo, TRUE, TRUE, 15);
 
