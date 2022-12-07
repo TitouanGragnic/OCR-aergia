@@ -173,13 +173,13 @@ int main(int argc, char *argv[])
     int *boolean;
     int res;
     int width = hexa ? 16 : 9;
-/*
+
 	size_t nb_layer = 4;
 	size_t Layers[] = {256, 128, 64, 10};
 	Network network = initialize_network(nb_layer, Layers);
-	training_digits(100, 50, 100, network);
+	training_digits(55, 5, 5, network);
 	free_network(network);
-*/
+
     grid = ocr_function("output/slot", width + 1);
     print_matrix(grid, width, width);
     boolean = malloc(width*width*sizeof(int));
