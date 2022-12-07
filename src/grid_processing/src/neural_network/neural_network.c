@@ -197,7 +197,7 @@ void training_digits(size_t n, int print, int save, Network network)
 int compute_digits(SDL_Surface* image)
 {
     Network network = load_network("logs/digits.txt");
-    double* inputs = malloc(sizeof(double) * 256);
+    double* inputs = malloc(sizeof(double) * 28*28);
     img_to_matrix(image, inputs);
     compute_network(network, inputs);
     int res = extract_res(output_network(network), 10);

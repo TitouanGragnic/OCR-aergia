@@ -95,14 +95,14 @@ SDL_Surface* resize_slot2(SDL_Surface* start_surface, int x, int y1, int y2)
     if(x1<0)
         x1 = 0;
     //int x2 = x + w/2;
-    s = w/16.0;
+    s = w/28.0;
     Uint32 newPixel;
-    resize_surface = SDL_CreateRGBSurface(0,16,16,32,0,0,0,0);
+    resize_surface = SDL_CreateRGBSurface(0,28,28,32,0,0,0,0);
 
-    for(int i = 0; i< 16; i++)
-        for(int j = 0; j< 16; j++)
+    for(int i = 0; i< 28; i++)
+        for(int j = 0; j< 28; j++)
         {
-            if(i == 0 || j ==0 || i == 15 || j == 15)
+            if(i == 0 || j ==0 || i == 27 || j == 27)
                 put_pixel_value(resize_surface,i,j,255);
             else
             {
