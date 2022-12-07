@@ -28,7 +28,7 @@
 #include "include/slot_processing/slicing.h"
 #include "include/slot_processing/redraw.h"
 
-#include "include/neural_network/neural_network.h"
+#include "../neural_network/neural_network/neural_network.h"
 
 #include "include/solver/solver.h"
 
@@ -169,13 +169,18 @@ int main(int argc, char *argv[])
         wait_for_keypressed();
     }
     slicing(bin_surface,hexa);
-    int *grid;
+	int *grid;
     int *boolean;
     int res;
     int width = hexa ? 16 : 9;
-
-    grid = malloc(sizeof(int) * width * width);
-    ocr_function("output/slot", grid, width + 1);
+/*
+	size_t nb_layer = 4;
+	size_t Layers[] = {256, 128, 64, 10};
+	Network network = initialize_network(nb_layer, Layers);
+	training_digits(100, 50, 100, network);
+	free_network(network);
+*/
+    grid = ocr_function("output/slot", width + 1);
     print_matrix(grid, width, width);
     boolean = malloc(width*width*sizeof(int));
     for(int i = 0;i<width*width;i++)

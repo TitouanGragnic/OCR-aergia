@@ -56,7 +56,7 @@ double error_network(Network network)
 	Layer* last_layer = &network.layers[network.nb_layers - 1];
 	for(size_t i = 0; i < last_layer->nb_neurons; i++)
 		error += pow(last_layer->errors[i], 2);
-	return error * 0.5;
+	return sqrt(error);
 }
 
 void forward_prop(Network network, double* inputs, double* outputs, double* error)
@@ -67,7 +67,6 @@ void forward_prop(Network network, double* inputs, double* outputs, double* erro
     update the errors for each neuron of each layer.
     */
     compute_network(network, inputs);
-	*error += error_network(network);
     Layer* last = &network.layers[network.nb_layers - 1];
     for(size_t i = 0; i < last->nb_neurons; i++)
         last->errors[i] =
@@ -87,6 +86,7 @@ void forward_prop(Network network, double* inputs, double* outputs, double* erro
             sigmoid_prime(current->outputs[current_i]) * sum;
         }
     }
+	*error += error_network(network);
 
 }
 
@@ -100,7 +100,7 @@ void backward_prop(Network network, char string[])
 	if(!strcmp(string, "XOR"))
 		l_rate = 0.4;
 	else
-		l_rate = 0.01;
+		l_rate = 0.08;
 
     for(size_t i = 1; i < network.nb_layers; i++)
     {
@@ -182,14 +182,14 @@ void print_training(Network network, Training training,
 
 void training_digits(size_t n, int print, int save, Network network)
 {
-    Training training = load_training("../../../neural_network/dataset/");
+    Training training = load_training("../neural_network/dataset/");
     for(size_t i = 0; i <= n; i++)
     {
         train_network(network, training, (i % print) == 0, "DIGITS");
         if((i % print) == 0)
             printf("EPOCH = %lu\n", i);
         if((i % save) == 0)
-            save_network(network, "../../logs/digits.txt");
+            save_network(network, "logs/digits.txt");
     }
     free_training(training);
 }
@@ -202,13 +202,13 @@ int compute_digits(SDL_Surface* image)
     compute_network(network, inputs);
     int res = extract_res(output_network(network), 10);
     free(inputs);
-        free_network(network);
+    free_network(network);
     return res;
 }
 
-void ocr_function(char* path, int* grid, int nb_output)
+int* ocr_function(char* path, int nb_output)
 {
-    //int* res = malloc(sizeof(int) * nb_output * nb_output); //[nb_output * nb_output];
+    int* res = malloc(sizeof(int) * nb_output * nb_output);
     char* filepath = malloc(4096 * sizeof(char));
     int tmp = 1;
     int tmp1 = 10;
@@ -228,13 +228,13 @@ void ocr_function(char* path, int* grid, int nb_output)
             {
 				sprintf(filepath, "%s/slot%d%d%d.png", path, k, i, j);
                 SDL_Surface* image = load_image(filepath);
-                grid[i * nb_output + j] = compute_digits(image);
+                res[i * nb_output + j] = compute_digits(image);
                 SDL_FreeSurface(image);
             }
         }
         free(filepath);
     }
-    //return res;
+    return res;
 }
 
 void save_network(Network network, const char* path)
