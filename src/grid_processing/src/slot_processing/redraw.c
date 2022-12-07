@@ -21,5 +21,4 @@ void matrixToSurface(int *matrix, SDL_Surface *img, int x, int y, int u, int v)
                 put_pixel(img, i, j, white);
         }
     }
-    free(matrix);
 }
