@@ -25,10 +25,13 @@
 #include "include/detection/distorsion.h"
 
 #include "include/slot_processing/slicing.h"
+#include "include/slot_processing/redraw.h"
 
 #include "include/neural_network/neural_network.h"
 
 #include "include/solver/solver.h"
+
+#include "include/matDigit.h"
 
 struct carth{
     int x;
@@ -195,12 +198,29 @@ int main(int argc, char *argv[])
 
     int tmp[81];
     for(int i =0 ;i<81; i++)
-      tmp[i] = result[i/9][i%9];
+        tmp[i] = result[i/9][i%9];
     print_matrix(tmp, 9,9);
 
 
+    for(int i = 0; i<width; i++)
+        for(int j = 0; j <width; j++)
+        {
+            if(result[i][j])
+            {
+                matrixToSurface(matDigit[result[i][j]-1],bin_surface,
+                                bin_surface->w/width*i,
+                                bin_surface->h/width*j,
+                                bin_surface->w/width*(i+1),
+                                bin_surface->h/width*(j+1));
+            }
+        }
+
+
+    screen_surface = display_image(bin_surface);
+    wait_for_keypressed();
+
     // ----------------------Free----------------------------------------------
-    //SDL_FreeSurface(bin_surface);
+    SDL_FreeSurface(bin_surface);
     SDL_FreeSurface(edge_surface);
     if(dev_mod && screen_surface != NULL)
         SDL_FreeSurface(screen_surface);

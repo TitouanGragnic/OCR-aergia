@@ -78,5 +78,5 @@ void slicing(SDL_Surface* main_surface, int hexa)
         pthread_join(threads[i], NULL);
     free(data);
     free(threads);
-    SDL_FreeSurface(main_surface);
+    //SDL_FreeSurface(main_surface);
 }

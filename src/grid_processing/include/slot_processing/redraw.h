@@ -10,6 +10,8 @@
 #include "../utils/init.h"
 #include "../detection/grid_detection.h"
 
+
+
 void matrixToSurface(int *matrix, SDL_Surface *img, int x, int y, int u, int v);
 
 #endif
