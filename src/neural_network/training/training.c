@@ -64,7 +64,7 @@ int extract_res(double* outputs, int n)
 
 Training load_training(char* path)
 {
-    size_t nb_tries = 20;
+    size_t nb_tries = 54;
     size_t nb_characters = 10;
     size_t nb_set = nb_tries * nb_characters;
     size_t nb_inputs = 256;
@@ -75,8 +75,8 @@ Training load_training(char* path)
     training.outputs = malloc(sizeof(double) * training.nb_out * training.nb_set);
 
     SDL_Surface* img;
-    char file[4096];
-    for(size_t try = 0; try <= nb_tries; try++)
+    char* file = malloc(sizeof(char) * 4096);
+    for(size_t try = 1; try <= nb_tries; try++)
     {
         for(size_t i = 0; i < 10; i++)
         {
@@ -84,10 +84,12 @@ Training load_training(char* path)
             img = load_image(file);
             printf("Load -> %s w:%i h:%i\n", file, img->w, img->h);
             size_t use = i + (try - 1) * nb_outputs;
+			training_in(&training, use);
             img_to_matrix(img, training_in(&training, use));
 			initialize_outputs(training_out(&training, use), nb_outputs, i);
+			SDL_FreeSurface(img);
         }
     }
-	SDL_FreeSurface(img);
+	free(file);
     return training;
 }

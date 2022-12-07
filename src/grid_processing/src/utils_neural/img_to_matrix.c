@@ -38,7 +38,7 @@ void save_matrix(FILE* fptr, double* matrix)
 		}
 }
 
-void create_dataset(char* path) // rewrite using snprintf
+void create_dataset(char* path)
 {
 	DIR* pDir;
 	struct dirent* pDirent;
@@ -87,7 +87,6 @@ void create_dataset(char* path) // rewrite using snprintf
 			SDL_Surface* image = load_image(tmp);
 			double* array = malloc(sizeof(double) * 256);
 			img_to_matrix(image, array);
-			//print_matrix(image, array);
 			save_matrix(fptr, array);
 			free(array);
 			SDL_FreeSurface(image);

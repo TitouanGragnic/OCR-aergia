@@ -1,5 +1,4 @@
 #include "../../include/slot_processing/slicing.h"
-
 #include <pthread.h>
 
 typedef struct{
@@ -14,8 +13,6 @@ void* thread_slot(void* data_i)
 {
     slot_thread* data = data_i;
     SDL_Surface* slot_surface;
-    SDL_Surface* copy;
-    SDL_Surface* result_surface;
     SDL_Surface* main_surface = data->main_surface;
 
     char file_name[] = "output/slot/slot000.png";
@@ -26,64 +23,16 @@ void* thread_slot(void* data_i)
     int newH = h/data->width;//per lines
 
     slot_surface = SDL_CreateRGBSurface(0, newW, newH,32,0,0,0,0);
-    copy = SDL_CreateRGBSurface(0, newW, newH,32,0,0,0,0);
     for(int x = 0;x<newW;x++)
-    {
         for(int y = 0;y<newH;y++)
         {
             int val = pixel_value(main_surface,data->i*newW+x,data->j*newH+y);
-
             put_pixel_value(slot_surface,x,y,val);
-            put_pixel_value(copy,x,y,val);
         }
-    }
-    result_surface = resize_slot(copy);
-    slot_surface = resize_slot(slot_surface);
-    for(int x = 0;x<16;x++)
-    {
-        for(int y = 0;y<16; y++)
-        {
-            int val = pixel_value(slot_surface,x,y);
+    int s = 15*newH/150;
 
-            if (val<100)
-            {
-                put_pixel_value(slot_surface,x,y,0);
-                put_pixel_value(result_surface,x,y,0);
-            }
-            else
-            {
-                put_pixel_value(slot_surface,x,y,255);
-                put_pixel_value(result_surface,x,y,255);
-            }
-        }
-    }
-    for (int x = 0;x<16;x++)
-    {
-        for (int y = 0; y<3; y++)
-        {
-            put_pixel_value(result_surface,x,y,255);
-            put_pixel_value(slot_surface,x,y,255);
-        }
-        for (int y = 13;y<16;y++)
-        {
-            put_pixel_value(result_surface,x,y,255);
-            put_pixel_value(slot_surface,x,y,255);
-        }
-    }
-    for (int y = 0;y<16;y++)
-    {
-        for (int x = 0;x<3; x++)
-        {
-            put_pixel_value(result_surface,x,y,255);
-            put_pixel_value(slot_surface,x,y,255);
-        }
-        for (int x = 13;x<16;x++)
-        {
-            put_pixel_value(result_surface,x,y,255);
-            put_pixel_value(slot_surface,x,y,255);
-        }
-    }
-    slot_surface = blobSlot(result_surface, 15, slot_surface);
+    slot_surface = resize_slot2(slot_surface,newW/2+s,s,newH-s);
+
 
     file_name[16] = '0'+data->number/100;
     data->number = data->number%100;
@@ -91,6 +40,7 @@ void* thread_slot(void* data_i)
     file_name[18] = '0'+data->number%10;
     SDL_SaveBMP(slot_surface, file_name);
     SDL_FreeSurface(slot_surface);
+
     pthread_exit(NULL);
 }
 
@@ -128,5 +78,5 @@ void slicing(SDL_Surface* main_surface, int hexa)
         pthread_join(threads[i], NULL);
     free(data);
     free(threads);
-    SDL_FreeSurface(main_surface);
+    //SDL_FreeSurface(main_surface);
 }

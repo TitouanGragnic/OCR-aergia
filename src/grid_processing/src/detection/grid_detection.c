@@ -94,8 +94,6 @@ blob blobFromImage(SDL_Surface *img, int size)
 
 SDL_Surface *blobSlot(SDL_Surface *img, int size, SDL_Surface *start)
 {
-     int max = 0;
-     blob maxi = {0,0,0,0,0,0,0,0};
      int w = img->w;
      int h = img->h;
      double id = 1;
@@ -111,19 +109,18 @@ SDL_Surface *blobSlot(SDL_Surface *img, int size, SDL_Surface *start)
 	       matr[i*h+j] = -1;
 	  }
      }
+     int sum_x=0,sum_y=0,n_pixels=0,max_x=0,max_y=0;
+     int min_x = w+1, min_y=h+1;
 
-     for(int i = 0;i<w;i++)
+     for(int i = 4;i<13;i++)
      {
-	  for(int j = 0;j<h;j++)
+	  for(int j = 3;j<13;j++)
 	  {
-	       id++;
 	       if (pixel_value(img, i, j) == 255 || matr[i*h+j] > -1)
                    continue;
 	       coor start = {i,j};
                push_stack(S,start);
 
-	       int sum_x=0,sum_y=0,n_pixels=0,max_x=0,max_y=0;
-	       int min_x = w+1, min_y=h+1;
 	       while(!is_empty_stack(S))//stack pas vide
 	       {
 		    coor top = pop_stack(S);
@@ -153,28 +150,23 @@ SDL_Surface *blobSlot(SDL_Surface *img, int size, SDL_Surface *start)
 			 }
 		    }
 	       }
-	       if(n_pixels < size)
-		    continue;
-	       blob nextcentre =
-		    {min_x,max_x,
-		    min_y,max_y,
-		    sum_x/n_pixels,
-		    sum_y/n_pixels,
-		    n_pixels,id};
 
-	       if(nextcentre.n_pixels>max)
-	       {
-		    max = nextcentre.n_pixels;
-		    maxi = nextcentre;
-	       }
 	  }
      }
+     blob maxi =
+         {min_x, max_x,
+          min_y, max_y,
+          sum_x/n_pixels,
+          sum_y/n_pixels,
+          n_pixels, id
+         };
      int var = 1;
-     if(maxi.n_pixels == 0)
+     if(maxi.n_pixels <= size)
      {
-	  maxi.max_y = img->h;
-	  maxi.max_x = img->w;
-	  var = 0;
+         for(int i = 0; i<16; i++)
+             for(int j = 0; j<16; j++)
+                 put_pixel_value(start, i, j, 255);
+         var = 0;
      }
      for(int i = 0;i<w && var;i++)
          for(int j = 0;j<h;j++)

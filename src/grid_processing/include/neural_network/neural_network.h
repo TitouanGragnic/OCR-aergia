@@ -37,6 +37,6 @@ void training_digits(size_t n, int print, int save, Network network);
 
 int compute_digits(SDL_Surface* image);
 
-int* final_function(char* path, int nb_output);
+int* ocr_function(char* path, int nb_output);
 
 #endif

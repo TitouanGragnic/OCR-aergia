@@ -38,7 +38,7 @@ void save_matrix(FILE* fptr, double* matrix)
 		}
 }
 
-void create_dataset(char* path) // rewrite using snprintf
+void create_dataset(char* path)
 {
 	DIR* pDir;
 	struct dirent* pDirent;
