@@ -200,16 +200,16 @@ int main(int argc, char *argv[])
     res = solve(result, width);
     res += 1;
 
-    int tmp[81];
-    for(int i =0 ;i<81; i++)
-        tmp[i] = result[i/9][i%9];
-    print_matrix(tmp, 9,9);
+    int tmp[width*width];
+    for(int i =0 ;i<width*width; i++)
+        tmp[i] = result[i/width][i%width];
+    print_matrix(tmp, width, width);
 
     int ** matDigit = get_digit_mat();
     for(int i = 0; i<width; i++)
         for(int j = 0; j <width; j++)
         {
-            if(result[i][j])
+            if(result[i][j] && !grid[i*width+j])
             {
                 matrixToSurface(matDigit[result[i][j]-1],bin_surface,
                                 bin_surface->w/width*i,
@@ -218,7 +218,7 @@ int main(int argc, char *argv[])
                                 bin_surface->h/width*(j+1));
             }
         }
-    for(int i =0; i<9; i++)
+    for(int i =0; i<width; i++)
         free(matDigit[i]);
     free(matDigit);
 
