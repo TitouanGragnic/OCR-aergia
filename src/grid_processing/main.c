@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     if(argc > 3 || argc == 1)
         errx(1, "Type wanted is : ./out file.png dev_mod\n");
 
-    size_t NUM_THREADS = 12*2;
+    size_t NUM_THREADS = 13*2;
 
     img_thread out;
     out.th = 0;
@@ -181,7 +181,8 @@ int main(int argc, char *argv[])
 	free_network(network);
 */
     grid = ocr_function("output/slot", width + 1);
-    print_matrix(grid, width, width);
+    if(dev_mod)
+        print_matrix(grid, width, width);
     boolean = malloc(width*width*sizeof(int));
     for(int i = 0;i<width*width;i++)
     {
@@ -203,7 +204,8 @@ int main(int argc, char *argv[])
     int tmp[width*width];
     for(int i =0 ;i<width*width; i++)
         tmp[i] = result[i/width][i%width];
-    print_matrix(tmp, width, width);
+    if(dev_mod)
+        print_matrix(tmp, width, width);
 
     int ** matDigit = get_digit_mat();
     for(int i = 0; i<width; i++)
@@ -221,10 +223,12 @@ int main(int argc, char *argv[])
     for(int i =0; i<width; i++)
         free(matDigit[i]);
     free(matDigit);
-
-    screen_surface = display_image(bin_surface);
-    wait_for_keypressed();
-
+    make_thread(&out, bin_surface, "output/treatment/final.png");
+    if(dev_mod)
+    {
+        screen_surface = display_image(bin_surface);
+        wait_for_keypressed();
+    }
     // ----------------------Free----------------------------------------------
     SDL_FreeSurface(bin_surface);
     SDL_FreeSurface(edge_surface);
