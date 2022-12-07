@@ -64,7 +64,7 @@ int extract_res(double* outputs, int n)
 
 Training load_training(char* path)
 {
-    size_t nb_tries = 30;
+    size_t nb_tries = 54;
     size_t nb_characters = 10;
     size_t nb_set = nb_tries * nb_characters;
     size_t nb_inputs = 256;

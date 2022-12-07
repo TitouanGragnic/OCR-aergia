@@ -100,7 +100,7 @@ void backward_prop(Network network, char string[])
 	if(!strcmp(string, "XOR"))
 		l_rate = 0.4;
 	else
-		l_rate = 0.01;
+		l_rate = 0.08;
 
     for(size_t i = 1; i < network.nb_layers; i++)
     {
