@@ -28,7 +28,7 @@
 #include "include/slot_processing/slicing.h"
 #include "include/slot_processing/redraw.h"
 
-#include "../neural_network/neural_network/neural_network.h"
+#include "include/neural_network/neural_network.h"
 
 #include "include/solver/solver.h"
 
