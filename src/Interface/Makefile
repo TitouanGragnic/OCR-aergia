@@ -8,5 +8,6 @@ aergia: Aergia.c
 	${CC} ${CFLAGS} -o ${PROG} ${PROG}.c ${LIBS}
 
 clean:
-	rm ${PROG}
-	rm output/slot/*.png
+	${RM} rm ${PROG}
+	${RM} output/slot/*.png
+	${RM} output/treatment/*.png

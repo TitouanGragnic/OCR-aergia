@@ -116,6 +116,7 @@ int main(int argc, char *argv[])
     // ----------------------Adaptive_Threshold--------------------------------
     int noise_level = noise(edge_surface, edge_surface->w,edge_surface->h);
     adaptive_threshold(edge_surface, noise_level > 300 ? 0.5 : 0.15,32);
+    int th_threshold = out.th;
     make_thread(&out, edge_surface, "output/treatment/threshold.png");
 
     if(dev_mod)
@@ -127,6 +128,8 @@ int main(int argc, char *argv[])
 
     if(dev_mod)
         screen_surface = display_image(edge_surface);
+
+    pthread_join(out.threads[th_threshold], NULL);
     bin_surface = load_image("output/treatment/threshold.png");
 
     // ----------------------Hough_Transform_Rotate----------------------------
