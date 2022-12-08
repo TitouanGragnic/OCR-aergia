@@ -85,7 +85,7 @@ void create_dataset(char* path)
 			strcpy(tmp, subpath);
 			strcat(tmp, pSubDirent->d_name);
 			SDL_Surface* image = load_image(tmp);
-			double* array = malloc(sizeof(double) * 256);
+			double* array = malloc(sizeof(double) * 784);
 			img_to_matrix(image, array);
 			save_matrix(fptr, array);
 			free(array);

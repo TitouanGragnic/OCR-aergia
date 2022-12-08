@@ -174,10 +174,10 @@ int main(int argc, char *argv[])
     int res;
     int width = hexa ? 16 : 9;
 /*
-	size_t nb_layer = 4;
-	size_t Layers[] = {256, 128, 64, 10};
+	size_t nb_layer = 5;
+	size_t Layers[] = {784, 392, 196, 98, 10};
 	Network network = initialize_network(nb_layer, Layers);
-	training_digits(100, 50, 100, network);
+	training_digits(30, 10, 10, network);
 	free_network(network);
 */
     grid = ocr_function("output/slot", width + 1);
@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
     for(int i = 0; i<width; i++)
         for(int j = 0; j <width; j++)
         {
-            if(result[i][j] && !grid[i*width+j])
+            if(result[i][j]) //&& !grid[i*width+j])
             {
                 matrixToSurface(matDigit[result[i][j]-1],bin_surface,
                                 bin_surface->w/width*i,

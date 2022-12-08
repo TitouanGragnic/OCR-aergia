@@ -58,16 +58,15 @@ int extract_res(double* outputs, int n)
 		i++;
 	if(i < 10)
 		return i;
-	printf("pepin\n");
 	return 0;
 }
 
 Training load_training(char* path)
 {
-    size_t nb_tries = 54;
+    size_t nb_tries = 58;
     size_t nb_characters = 10;
     size_t nb_set = nb_tries * nb_characters;
-    size_t nb_inputs = 256;
+    size_t nb_inputs = 784;
     size_t nb_outputs = 10;
 
     Training training = { NULL, NULL, nb_set, nb_inputs, nb_outputs};
