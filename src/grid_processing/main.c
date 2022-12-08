@@ -211,13 +211,13 @@ int main(int argc, char *argv[])
     for(int i = 0; i<width; i++)
         for(int j = 0; j <width; j++)
         {
-            if(result[i][j]) //&& !grid[i*width+j])
+            if(result[i][j] && !grid[i*width+j])
             {
                 matrixToSurface(matDigit[result[i][j]-1],bin_surface,
-                                bin_surface->w/width*i,
-                                bin_surface->h/width*j,
-                                bin_surface->w/width*(i+1),
-                                bin_surface->h/width*(j+1));
+                                bin_surface->w/width*i+5,
+                                bin_surface->h/width*j+5,
+                                bin_surface->w/width*(i+1)-5,
+                                bin_surface->h/width*(j+1)-5);
             }
         }
     for(int i =0; i<width; i++)
