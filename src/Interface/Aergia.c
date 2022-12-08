@@ -131,7 +131,7 @@ void next_step(GtkButton* button, gpointer data)
         "perspective",
         "final"};
     char filename[100];
-    if ((aergia->step<12 && dir == 1) || (aergia->step>0 && dir == -1))
+    if ((aergia->step<=12 && dir == 1) || (aergia->step>0 && dir == -1))
     {
         aergia->step += dir;
         gtk_label_set_label(GTK_LABEL(aergia->status),filenames[aergia->step]);
@@ -146,11 +146,6 @@ void next_step(GtkButton* button, gpointer data)
 
         pixbuf = gdk_pixbuf_scale_simple(pixbuf, 650, 650*height/width, GDK_INTERP_BILINEAR);
         gtk_image_set_from_pixbuf(GTK_IMAGE(aergia->image),pixbuf);
-        if (aergia->step == 12)
-	{
-            gtk_widget_set_sensitive(GTK_WIDGET(aergia->step_button),FALSE);
-            gtk_widget_set_sensitive(GTK_WIDGET(aergia->end_button),FALSE);
-	}
 
     }
     if (aergia->step>= 12)
@@ -178,10 +173,10 @@ void magic(GtkButton* button, gpointer data)
     GdkPixbuf *pixbuf;
     GtkWidget *empty;
 
-    aergia->step = 11;
-    gtk_label_set_label(GTK_LABEL(aergia->status),"perspective");
+    aergia->step = 12;
+    gtk_label_set_label(GTK_LABEL(aergia->status),"final");
 
-    empty = gtk_image_new_from_file("output/treatment/perspective.png");
+    empty = gtk_image_new_from_file("output/treatment/final.png");
     pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(empty));
 
     int width = gdk_pixbuf_get_width (pixbuf);
@@ -301,12 +296,12 @@ int main(int argc, char **argv)
     gtk_widget_set_sensitive(GTK_WIDGET(end_button),FALSE);
 
     //boxing
-    gtk_box_pack_end(GTK_BOX(box_button), quit_button, TRUE, FALSE, 70);
+    gtk_box_pack_end(GTK_BOX(box_button), quit_button, TRUE, FALSE, 90);
     gtk_box_pack_end(GTK_BOX(box_button), end_button, TRUE, FALSE, 0);
     gtk_box_pack_end(GTK_BOX(box_button), prev_button, TRUE, FALSE, 0);
     gtk_box_pack_end(GTK_BOX(box_button), step_button, TRUE, FALSE, 0);
     gtk_box_pack_end(GTK_BOX(box_button), load_button, TRUE, FALSE, 0);
-    gtk_box_pack_end(GTK_BOX(box_button), hex_mode, TRUE, FALSE, 20);
+    //gtk_box_pack_end(GTK_BOX(box_button), hex_mode, TRUE, FALSE, 20);
 
 
     gtk_widget_set_size_request(GTK_WIDGET(empty),850,0);
