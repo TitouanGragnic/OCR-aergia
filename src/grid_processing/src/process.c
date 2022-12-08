@@ -1,51 +1,8 @@
-#include <err.h>
-#include <stdlib.h>
-#include <math.h>
-#include <pthread.h>
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
-#include "include/utils/init.h"
-#include "include/utils/scale.h"
-#include "include/utils/resize.h"
-#include "include/utils/thread.h"
-#include "include/utils/mat_digit.h"
+#include "../include/process.h"
 
-#include "include/color_treatment/smoothing.h"
-#include "include/color_treatment/increase_contrast.h"
-#include "include/color_treatment/blur.h"
-#include "include/color_treatment/noise.h"
-#include "include/color_treatment/grayscale.h"
-#include "include/color_treatment/brightness.h"
-#include "include/color_treatment/adaptive_threshold.h"
-#include "include/color_treatment/edge_detection.h"
-#include "include/color_treatment/inverse.h"
-#include "include/color_treatment/bold.h"
-
-#include "include/detection/grid_detection.h"
-#include "include/detection/hough_transform.h"
-#include "include/detection/distorsion.h"
-
-#include "include/slot_processing/slicing.h"
-#include "include/slot_processing/redraw.h"
-
-#include "../neural_network/neural_network/neural_network.h"
-
-#include "include/solver/solver.h"
-
-
-struct carth{
-    int x;
-    int y;
-};
-
-
-
-int main(int argc, char *argv[])
+void process(char* path, int hexa, int dev_mod)
 {
     // ----------------------Assert---------------------------------------------
-    if(argc > 3 || argc == 1)
-        errx(1, "Type wanted is : ./out file.png dev_mod\n");
-
     size_t NUM_THREADS = 13*2;
 
     img_thread out;
@@ -57,8 +14,6 @@ int main(int argc, char *argv[])
     SDL_Surface* bin_surface;
     SDL_Surface* screen_surface = NULL;
     int max;
-    int dev_mod = argc != 3 ||argv[2][0] == '1';
-    int hexa = argc==3 && (argv[2][0] == '1' ||argv[2][0] == '0' );
     // arg 3 == nothing -> devmod + !hexa
     // arg 3 == 1 -> devmod + hexa
     // arg 3 == 0 -> !devmod + hexa
@@ -68,7 +23,7 @@ int main(int argc, char *argv[])
     init_sdl();
 
     // ----------------------Load_Image_and_resize------------------------------
-    edge_surface = load_image(argv[1]);
+    edge_surface = load_image(path);
 
     if(edge_surface->w > 1024 ||edge_surface->h > 1024)
         edge_surface = resize(edge_surface);
@@ -249,5 +204,4 @@ int main(int argc, char *argv[])
     free(result);
     free(grid);
     free(boolean);
-    return 0;
 }

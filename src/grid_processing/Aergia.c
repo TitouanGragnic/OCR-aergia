@@ -1,5 +1,6 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include "include/process.h"
 
 typedef struct Aergia
 {
@@ -23,9 +24,10 @@ typedef struct Aergia
 
 } Aergia;
 
+
 void load(GtkButton* button, gpointer data)
 {
-    /*
+/*
       to load the image
     */
     button = button;
@@ -64,18 +66,15 @@ void load(GtkButton* button, gpointer data)
         filename = gtk_file_chooser_get_filename (chooser);
 
 	//hex mode 0=on , 2=off
+        /*
 	char *mode;
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(aergia->hex_mode))== TRUE)
 	  mode = "0";
 	else
 	  mode = "2";
-
+        */
         //treatment here
-        char commande[200];
-        sprintf(commande,"%s %s %s","./main", filename,mode);
-        int res = system(commande);
-	res = res;
-        //
+        process(filename,0,0);
 
         empty = gtk_image_new_from_file("output/treatment/original.png");
         pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(empty));
@@ -100,7 +99,6 @@ void load(GtkButton* button, gpointer data)
     }
 
     gtk_widget_destroy (dialog);
-
 
 }
 
@@ -228,7 +226,7 @@ int main(int argc, char **argv)
 
     //Window
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_title(GTK_WINDOW(window),"Aergia 0.4");
+    gtk_window_set_title(GTK_WINDOW(window),"Aergia 1.2");
     gtk_window_set_default_size(GTK_WINDOW(window), width, height);
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
@@ -241,7 +239,7 @@ int main(int argc, char **argv)
 
     //VISUALIZER
 
-    GtkWidget *empty = gtk_image_new_from_file("empty2.png");
+    GtkWidget *empty = gtk_image_new_from_file("ui_element/empty2.png");
 
     //Icon
     GtkWidget *foldericon;
@@ -341,7 +339,7 @@ int main(int argc, char **argv)
 
     //Top logo
 
-    GtkWidget *logo = gtk_image_new_from_file("logo2.png");
+    GtkWidget *logo = gtk_image_new_from_file("ui_element/logo2.png");
     GdkPixbuf *pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(logo));
     pixbuf = gdk_pixbuf_scale_simple(pixbuf, width/75*36,width/75*12 , GDK_INTERP_BILINEAR);
     logo = gtk_image_new_from_pixbuf(pixbuf);
