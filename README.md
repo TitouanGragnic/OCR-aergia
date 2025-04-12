@@ -1,4 +1,4 @@
-# OCR Aergia - EPITA S3 Project
+# OCR Aergia ~~- EPITA S3 Project~~
 
 ![Aergia logo](resources/aergia.png)
 	test for branch
